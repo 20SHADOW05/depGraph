@@ -16,11 +16,11 @@ const upload = multer({
     fileFilter: (req, file, callBack) => {
     const allowed = [
       'package-lock.json',
-      'requirements.txt',
-      'poetry.lock',
-      'Cargo.lock',
-      'go.mod',
-      'go.sum'
+      // 'requirements.txt',
+      // 'poetry.lock',
+      // 'Cargo.lock',
+      // 'go.mod',
+      // 'go.sum'
     ]
     if (allowed.includes(file.originalname)) {
       callBack(null, true)
@@ -30,7 +30,7 @@ const upload = multer({
   }
 });
 
-server.use('/upload', upload.single('file'), uploadRouter);
+server.use('/graph', upload.single('file'), uploadRouter);
 
 server.use((err, req, res, next) => {
     return res.status(400).json({ error: err.message });
