@@ -66,6 +66,7 @@ async function buildGraph(root) {
         name: root,
         range: "latest",
         parent: null,
+        depth: 0,
     });
 
     const BATCH_SIZE = 8;
@@ -110,6 +111,10 @@ async function buildGraph(root) {
                     label: id,
                     name: pkg.name,
                     version: resolved,
+                    type: "package",
+                    depth: item.depth,
+                    requestedRange: item.parent ? item.range : null,
+                    source: "package-name",
                     deprecated: pkg.deprecated || null,
                 });
             }
@@ -138,6 +143,7 @@ async function buildGraph(root) {
                     name: depName,
                     range: depRange,
                     parent: id,
+                    depth: item.depth + 1,
                 });
             }
         }
