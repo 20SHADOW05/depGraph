@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --teal: #1D9E75;
+  --teal2: #5DCAA5;
+  --teal3: #9FE1CB;
+  --bg: #070a12;
+  --bg2: #0c1220;
+  --bg3: #101827;
+  --bg4: #131d2e;
+  --bg5: #1a2540;
+  --bdr: rgba(148, 163, 184, 0.13);
+  --bdr2: rgba(148, 163, 184, 0.22);
+  --bdr-g: rgba(29, 158, 117, 0.35);
+  --tx: #e2e8f0;
+  --tx2: #94a3b8;
+  --tx3: #4a5568;
+  --red: #e87373;
+  --amber: #f5a623;
+  --blue: #7dd3fc;
+  --sidebar-w: 318px;
+  --header-h: 56px;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', system-ui, sans-serif;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--tx);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+/* shared btn primitives used across pages */
+.btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 7px;
+  border: none;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--tx2);
+  border: 1px solid var(--bdr);
+}
+
+.btn-ghost:hover {
+  border-color: var(--bdr2);
+  color: var(--tx);
+}
+
+.btn-solid {
+  background: var(--teal);
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-solid:hover {
+  background: var(--teal2);
+  color: #060e09;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

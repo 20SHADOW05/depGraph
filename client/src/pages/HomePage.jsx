@@ -1,5 +1,6 @@
 import Logo from '../components/Logo.jsx';
 import SearchPanel from '../components/SearchPanel.jsx';
+import '../styles/landing.css';
 
 export default function HomePage() {
   return (

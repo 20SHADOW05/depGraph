@@ -1,0 +1,210 @@
+/* ── graph page shell ── */
+.graph-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.graph-page {
+  padding-top: var(--header-h);
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.graph-area {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%, rgba(148, 163, 184, 0.08), transparent 68%),
+    var(--bg);
+}
+
+.graph-flow {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── react-flow overrides ── */
+.react-flow__pane {
+  cursor: grab;
+}
+
+.react-flow__pane:active {
+  cursor: grabbing;
+}
+
+.react-flow__node {
+  cursor: pointer;
+  z-index: 2;
+}
+
+.react-flow__edge {
+  z-index: 1;
+}
+
+/* ── package nodes ── */
+.package-node {
+  width: 190px;
+  max-width: 340px;
+  overflow: hidden;
+  background: #f8fafc;
+  border: 2px solid #64748b;
+  border-radius: 8px;
+  color: #111827;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+  transition: opacity 0.15s, filter 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+
+.package-node::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 7px;
+  background: #64748b;
+}
+
+/* node type variants */
+.package-node-root    { border-color: #0d9488; }
+.package-node-workspace { border-color: #4f46e5; }
+.package-node-package { border-color: #475569; }
+.package-node-peer    { border-color: #0284c7; }
+
+.package-node-root::before      { background: #0d9488; }
+.package-node-workspace::before { background: #4f46e5; }
+.package-node-package::before   { background: #475569; }
+.package-node-peer::before      { background: #0284c7; }
+
+/* selection / path states */
+.package-node.dimmed {
+  opacity: 0.12;
+  filter: grayscale(1);
+  box-shadow: none;
+}
+
+.package-node.ancestor-path {
+  background: #dbeafe;
+  border-color: #60a5fa;
+}
+
+.package-node.dependency-path {
+  background: #fef3c7;
+  border-color: #f59e0b;
+}
+
+.package-node.selected-path {
+  background: #f8fafc;
+}
+
+.react-flow__node.selected .package-node {
+  box-shadow: 0 0 0 4px rgba(248, 250, 252, 0.2), 0 12px 30px rgba(0, 0, 0, 0.32);
+}
+
+.package-node-name {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px 10px 20px;
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.node-handle {
+  width: 1px;
+  height: 1px;
+  min-width: 1px;
+  min-height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── edges ── */
+.react-flow__edge-path.dependency-edge {
+  stroke: rgba(148, 163, 184, 0.72);
+  stroke-width: 2;
+  pointer-events: none;
+  transition: opacity 0.15s, stroke 0.15s, stroke-width 0.15s;
+}
+
+.react-flow__edge-path.dependency-edge.dimmed {
+  opacity: 0.1;
+}
+
+.react-flow__edge-path.dependency-edge.ancestor-path {
+  stroke: #60a5fa;
+  stroke-width: 3;
+}
+
+.react-flow__edge-path.dependency-edge.dependency-path {
+  stroke: #f59e0b;
+  stroke-width: 3;
+}
+
+/* ── empty / loading states ── */
+.graph-empty-message {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--tx3);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.graph-empty {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--tx3);
+  text-align: center;
+}
+
+.graph-empty p {
+  max-width: 280px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ── controls ── */
+.react-flow__controls {
+  left: 20px;
+  bottom: 20px;
+  box-shadow: none;
+}
+
+.react-flow__controls-button {
+  width: 34px;
+  height: 34px;
+  background: rgba(15, 23, 42, 0.94);
+  border-color: rgba(148, 163, 184, 0.2);
+  color: var(--tx2);
+}
+
+.react-flow__controls-button:hover {
+  background: rgba(30, 41, 59, 0.96);
+  color: var(--tx);
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor;
+}
+
+/* ── misc ── */
+#graph-vis-container {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}

@@ -1,8 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage.jsx';
 import GraphPage from './pages/GraphPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import SignupPage from './pages/SignupPage.jsx';
 
-const BASENAME = '/depGraph';
+const BASENAME = '/';
 
 const router = createBrowserRouter(
   [
@@ -13,6 +15,14 @@ const router = createBrowserRouter(
     {
       path: '/graph',
       element: <GraphPage />
+    },
+    {
+      path: '/login',
+      element: <LoginPage />
+    },
+    {
+      path: '/signup',
+      element: <SignupPage />
     }
   ],
   {

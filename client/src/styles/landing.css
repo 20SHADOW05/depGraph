@@ -1,0 +1,224 @@
+/* ── landing / home page ── */
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% -10%, rgba(29, 158, 117, 0.07) 0%, transparent 65%),
+    linear-gradient(135deg, #070a12 0%, #0c1220 52%, #070a12 100%);
+}
+
+.landing-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 75%, transparent 100%);
+}
+
+.landing-shell {
+  width: min(580px, 100%);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.landing-logo {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.55s ease both;
+}
+
+.landing-wordmark {
+  display: flex;
+  align-items: baseline;
+}
+
+.landing-dep {
+  font-size: 50px;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: -2px;
+}
+
+.landing-graph {
+  font-size: 50px;
+  font-weight: 400;
+  color: var(--tx);
+  font-family: var(--mono);
+  letter-spacing: -2px;
+}
+
+.landing-tagline {
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--tx2);
+  margin: 0 0 40px;
+  text-align: center;
+  animation: fadeUp 0.55s 0.08s ease both;
+}
+
+/* search card */
+.landing-card {
+  width: 100%;
+  background: rgba(12, 18, 32, 0.82);
+  border: 1px solid var(--bdr2);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(20px);
+  animation: fadeUp 0.55s 0.16s ease both;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.landing-card:focus-within {
+  border-color: var(--bdr-g);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45), 0 0 0 3px rgba(29, 158, 117, 0.07);
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  background: var(--bg3);
+  border: 1px solid var(--bdr);
+  border-radius: 10px;
+  padding: 4px 4px 4px 14px;
+}
+
+.search-input {
+  min-width: 0;
+  flex: 1;
+  height: 44px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--tx);
+  caret-color: var(--teal);
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+.search-input::placeholder {
+  color: var(--tx3);
+}
+
+.search-btn {
+  height: 36px;
+  padding: 0 18px;
+  background: var(--teal);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.search-btn:hover {
+  background: var(--teal2);
+  color: #060e09;
+}
+
+.search-btn:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.search-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px;
+  color: var(--tx3);
+  font-size: 11px;
+}
+
+.search-divider::before,
+.search-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--bdr);
+}
+
+.upload-wrap {
+  padding: 0 4px 4px;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.upload-btn {
+  width: 100%;
+  height: 40px;
+  background: transparent;
+  border: 1px dashed var(--bdr2);
+  border-radius: 9px;
+  color: var(--tx2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 12px;
+  transition: all 0.15s;
+}
+
+.upload-btn:hover {
+  border-color: var(--bdr-g);
+  color: var(--teal2);
+}
+
+.upload-btn:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.search-status {
+  margin: 0;
+  padding: 6px 4px 2px;
+  color: var(--amber);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.hint-chips {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 18px;
+  animation: fadeUp 0.55s 0.24s ease both;
+}
+
+.hint-chip {
+  padding: 5px 13px;
+  background: rgba(12, 18, 32, 0.8);
+  border: 1px solid var(--bdr);
+  border-radius: 20px;
+  color: var(--tx2);
+  font-family: var(--mono);
+  font-size: 11px;
+  transition: all 0.15s;
+}
+
+.hint-chip:hover {
+  border-color: var(--bdr-g);
+  color: var(--teal2);
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchPackageGraph } from '../lib/api.js';
+import { IoMdSearch } from "react-icons/io";
 
 export default function HeaderSearch({ defaultValue, onSearch }) {
   const navigate = useNavigate();
@@ -13,10 +14,7 @@ export default function HeaderSearch({ defaultValue, onSearch }) {
 
   return (
     <div className="header-search">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5" />
-        <line x1="10" y1="10" x2="14" y2="14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
+      <IoMdSearch />
       <input
         placeholder="search package..."
         value={value}
