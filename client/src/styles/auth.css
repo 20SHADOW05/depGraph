@@ -1,24 +1,17 @@
 /* ── auth pages (login + signup) ── */
 
 .auth-shell {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 560px;
-}
-
-/* ── left brand panel ── */
-.auth-left {
   position: relative;
+  min-height: 100vh;
   overflow: hidden;
   background: var(--bg2);
-  border-right: 1px solid var(--bdr);
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
 }
 
-.auth-left-grid {
+.auth-bg-grid {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -26,115 +19,62 @@
     linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
   background-size: 40px 40px;
-  mask-image: radial-gradient(ellipse 70% 70% at 40% 50%, black 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 45%, black 30%, transparent 100%);
 }
 
-.auth-left-glow {
+.auth-bg-glow {
   position: absolute;
-  width: 520px;
-  height: 520px;
+  width: 560px;
+  height: 560px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(29, 158, 117, 0.06) 0%, transparent 70%);
-  top: 50%;
-  left: 40%;
+  background: radial-gradient(circle, rgba(29, 158, 117, 0.07) 0%, transparent 70%);
+  top: 42%;
+  left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
-.auth-brand {
+/* ── brand mark above card ── */
+.auth-brand-center {
   display: flex;
   align-items: center;
   gap: 4px;
-  position: relative;
-  z-index: 1;
+  width: fit-content;
+  margin: 0 auto 32px;
+  text-decoration: none;
 }
 
 .auth-brand-dep {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--teal2);
   letter-spacing: -0.5px;
 }
 
 .auth-brand-graph {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 400;
   color: var(--tx);
-  font-family: var(--mono);
+  font-family: var(--sans);
   letter-spacing: -0.5px;
 }
 
-.auth-left-body {
-  position: relative;
-  z-index: 1;
-  max-width: 420px;
-}
-
-.auth-left-headline {
-  font-size: 30px;
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--tx);
-  letter-spacing: -0.8px;
-  margin-bottom: 14px;
-}
-
-.auth-left-sub {
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--tx2);
-  line-height: 1.7;
-  max-width: 340px;
-}
-
-.auth-left-features {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 28px;
-  position: relative;
-  z-index: 1;
-}
-
-.auth-feature {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  color: var(--tx2);
-}
-
-.auth-feature-icon {
-  color: var(--tx3);
-  display: flex;
-  flex-shrink: 0;
-}
-
-.auth-left-footer {
-  font-size: 11px;
-  color: var(--tx3);
-  font-family: var(--mono);
-  position: relative;
-  z-index: 1;
-}
-
-/* ── right form panel ── */
-.auth-right {
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 40px;
-}
-
+/* ── form card ── */
 .auth-form-wrap {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 340px;
+  max-width: 420px;
+  background: var(--bg);
+  border: 1px solid var(--bdr);
+  border-radius: 16px;
+  padding: 40px;
   animation: fadeUp 0.35s ease both;
 }
 
 .auth-form-header {
   margin-bottom: 28px;
+  text-align: center;
 }
 
 .auth-form-title {
@@ -155,7 +95,6 @@
 .auth-form-sub a {
   color: var(--tx);
   font-weight: 500;
-  text-decoration: none;
   transition: color 0.15s;
 }
 
@@ -197,7 +136,7 @@
   gap: 12px;
   margin: 18px 0;
   color: var(--tx3);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .auth-divider::before,
@@ -217,7 +156,7 @@
 }
 
 .field-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--tx2);
   display: flex;
@@ -336,7 +275,7 @@
 .pw-strength-label {
   font-size: 10px;
   color: var(--tx3);
-  font-family: var(--mono);
+  font-family: var(--sans);
 }
 
 .pw-strength-label.weak   { color: var(--red); }
@@ -426,18 +365,13 @@
 }
 
 /* ── responsive ── */
-@media (max-width: 760px) {
+@media (max-width: 480px) {
   .auth-shell {
-    grid-template-columns: 1fr;
+    padding: 16px;
   }
 
-  .auth-left {
-    display: none;
-  }
-
-  .auth-right {
-    padding: 40px 24px;
-    align-items: flex-start;
-    padding-top: 56px;
+  .auth-form-wrap {
+    padding: 32px 24px;
+    border-radius: 14px;
   }
 }

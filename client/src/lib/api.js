@@ -1,33 +1,70 @@
+import { useState, useEffect } from 'react';
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
 async function readJson(res) {
-  const data = await res.json().catch(() => ({}));
+	const data = await res.json().catch(() => ({}));
 
-  if (!res.ok) {
-    throw new Error(data.error || 'Request failed');
-  }
+	if (!res.ok) {
+		throw new Error(data.error || 'Request failed');
+	}
 
-  return data;
+	return data;
 }
 
 export async function fetchPackageGraph(pkgName) {
-  const res = await fetch(`${API_BASE}/graph/pkg`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ pkgName })
-  });
+	const res = await fetch(`${API_BASE}/graph/pkg`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ pkgName })
+	});
 
-  return readJson(res);
+	return readJson(res);
 }
 
 export async function uploadLockfile(file) {
-  const formData = new FormData();
-  formData.append('file', file);
+	const formData = new FormData();
+	formData.append('file', file);
 
-  const res = await fetch(`${API_BASE}/graph`, {
-    method: 'POST',
-    body: formData
-  });
+	const res = await fetch(`${API_BASE}/graph`, {
+		method: 'POST',
+		body: formData
+	});
 
-  return readJson(res);
+	return readJson(res);
+}
+
+export async function signupPost(name, email, password) {
+	const res = await fetch(`${API_BASE}/auth/signup`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ name, email, password })
+	});
+	const data = await res.json();
+  	if (!res.ok) throw new Error(data.message || 'Signup failed');
+}
+
+export async function loginPost(email, password) {
+	const res = await fetch(`${API_BASE}/auth/login`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ email, password} )
+	});
+
+	const data = await res.json();
+	if(!res.ok) throw new Error(data.message || 'Logi failed');
+}
+
+export function userCheck() {
+	const [user, setUser] = useState(null);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		fetch(`${API_BASE}/auth/me`, { credentials: 'include' })
+		.then((res) => (res.ok ? res.json() : null))
+		.then((data) => setUser(data?.user || null))
+		.catch(() => setUser(null))
+		.finally(() => setLoading(false));
+	}, []);
+
+	return { user, loading };
 }

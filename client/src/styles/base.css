@@ -1,9 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap');
-
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'noto';
+  src: url('../public/JetBrainsMono[wght].ttf');
 }
 
 :root {
@@ -27,7 +30,7 @@
   --sidebar-w: 318px;
   --header-h: 56px;
   --mono: 'DM Mono', monospace;
-  --sans: 'DM Sans', system-ui, sans-serif;
+  --sans: 'noto', 'DM Sans', system-ui, sans-serif;
 }
 
 html,

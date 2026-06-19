@@ -44,6 +44,7 @@
 .landing-wordmark {
   display: flex;
   align-items: baseline;
+  gap: 4px;
 }
 
 .landing-dep {
@@ -57,7 +58,7 @@
   font-size: 50px;
   font-weight: 400;
   color: var(--tx);
-  font-family: var(--mono);
+  font-family: var(--sans);
   letter-spacing: -2px;
 }
 

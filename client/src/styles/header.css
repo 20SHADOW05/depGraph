@@ -41,7 +41,7 @@
 
 .wordmark-graph {
   color: var(--tx);
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 17px;
   font-weight: 400;
   letter-spacing: -0.3px;
@@ -70,7 +70,7 @@
   border: 1px solid var(--bdr);
   border-radius: 8px;
   padding: 0 10px 0 32px;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 13px;
   color: var(--tx);
   outline: none;

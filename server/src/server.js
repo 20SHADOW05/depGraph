@@ -1,10 +1,12 @@
 import express from 'express';
 const server = express();
 
+import cookieParser from 'cookie-parser';
 import multer from 'multer';
 import cors from 'cors';
 
 server.use(cors());
+app.use(cookieParser());
 server.use(express.json());
 server.use(express.urlencoded({ extended : true }));
 
