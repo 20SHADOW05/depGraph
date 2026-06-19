@@ -41,7 +41,11 @@ export default function LoginPage() {
 	}
 
 	function handleGoogle() {
-		console.log('→ redirect to Google OAuth');
+		try {
+			// await , i hv to implement ts 
+		} catch(err) {
+			setGlobalErr(err.message);
+		}
 	}
 
 	return (

@@ -34,7 +34,7 @@ authRouter.post('/signup' , async (req, res) => {
     return res.status(201).json({ message: 'Account created' });
 })
 
-authRouter.get('/login', (req, res) => {
+authRouter.post('/login', (req, res) => {
     const { email, password } = req.body;
 
     if(!email || !password) {

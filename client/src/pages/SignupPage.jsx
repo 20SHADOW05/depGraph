@@ -69,7 +69,7 @@ export default function SignupPage() {
 
 		try {
 			const name = `${firstName.trim()} ${lastName.trim()}`;
-			await  signupPost(name, email, password);
+			await signupPost(name, email, password);
 		} catch (err) {
 			setGlobalErr(err.message);
 		} finally {
@@ -78,7 +78,11 @@ export default function SignupPage() {
 	}
 
   	function handleGoogle() {
-		
+		try {
+			// await , i hv to implement ts 
+		} catch(err) {
+			setGlobalErr(err.message);
+		}
   	}
 
   	function clearError(key) {
