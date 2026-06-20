@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+export const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
 async function readJson(res) {
 	const data = await res.json().catch(() => ({}));
@@ -36,6 +36,7 @@ export async function uploadLockfile(file) {
 export async function signupPost(name, email, password) {
 	const res = await fetch(`${API_BASE}/auth/signup`, {
 		method: 'POST',
+		credentials: 'include',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ name, email, password })
 	});
@@ -46,6 +47,7 @@ export async function signupPost(name, email, password) {
 export async function loginPost(email, password) {
 	const res = await fetch(`${API_BASE}/auth/login`, {
 		method: 'POST',
+		credentials: 'include',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ email, password} )
 	});
@@ -67,4 +69,23 @@ export function userCheck() {
 	}, []);
 
 	return { user, loading };
+}
+
+export async function fetchMyGraphs() {
+  const res = await fetch(`${API_BASE}/graph/saved`, { credentials: 'include' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Failed to load saved graphs');
+  return data.graphs;
+}
+
+export async function clearAllGraphsRequest() {
+  const res = await fetch(`${API_BASE}/graph/saved`, { method: 'DELETE', credentials: 'include' });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.message || 'Failed to clear graphs');
+  }
+}
+
+export async function logoutPost() {
+  await fetch(`${API_BASE}/auth/logout`, { method: 'POST', credentials: 'include' });
 }

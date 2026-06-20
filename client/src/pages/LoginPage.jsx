@@ -5,6 +5,7 @@ import { FcGoogle } from 'react-icons/fc';
 import Logo from '../components/Logo.jsx';
 import '../styles/auth.css';
 import { loginPost } from '../lib/api.js';
+import { API_BASE } from '../lib/api.js';
 
 export default function LoginPage() {
 	const [email, setEmail]       = useState('');
@@ -42,7 +43,7 @@ export default function LoginPage() {
 
 	function handleGoogle() {
 		try {
-			// await , i hv to implement ts 
+  			window.location.href = `${API_BASE}/auth/google`; 
 		} catch(err) {
 			setGlobalErr(err.message);
 		}

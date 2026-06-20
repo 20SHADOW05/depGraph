@@ -4,7 +4,8 @@ import { FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import Logo from '../components/Logo.jsx';
 import '../styles/auth.css';
-import { signupPost } from '../lib/api.js';
+import { signupPost, API_BASE } from '../lib/api.js';
+
 
 /* ── password strength helpers ── */
 function getStrength(pw) {
@@ -79,7 +80,7 @@ export default function SignupPage() {
 
   	function handleGoogle() {
 		try {
-			// await , i hv to implement ts 
+  			window.location.href = `${API_BASE}/auth/google`;
 		} catch(err) {
 			setGlobalErr(err.message);
 		}

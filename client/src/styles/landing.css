@@ -223,3 +223,13 @@
   border-color: var(--bdr-g);
   color: var(--teal2);
 }
+
+.landing-nav {
+  position: fixed;
+  top: 24px;
+  right: 28px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

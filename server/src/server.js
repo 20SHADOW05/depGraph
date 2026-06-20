@@ -2,41 +2,34 @@ import express from 'express';
 const server = express();
 
 import cookieParser from 'cookie-parser';
-import multer from 'multer';
+import passport from 'passport';
 import cors from 'cors';
 
-server.use(cors());
-app.use(cookieParser());
+import initDb from './config/db.js';
+import { configurePassport } from './config/auth.js';
+
+initDb();
+configurePassport();
+
+server.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+server.use(passport.initialize());
+server.use(cookieParser());
 server.use(express.json());
 server.use(express.urlencoded({ extended : true }));
 
 import uploadRouter from './routes/uploadRoute.js';
+import authRouter from './routes/authRoute.js';
 
-const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: { fileSize: 7 * 1024 * 1024 },
-    fileFilter: (req, file, callBack) => {
-    const allowed = [
-      'package-lock.json',
-      // 'requirements.txt',
-      // 'poetry.lock',
-      // 'Cargo.lock',
-      // 'go.mod',
-      // 'go.sum'
-    ]
-    if (allowed.includes(file.originalname)) {
-      callBack(null, true)
-    } else {
-      callBack(new Error('Unsupported file type'))
-    }
-  }
-});
-
-server.use('/graph', upload.single('file'), uploadRouter);
+server.use('/graph', uploadRouter);
+server.use('/auth', authRouter);
 
 server.use((err, req, res, next) => {
-    return res.status(400).json({ error: err.message });
-})
+  console.error(err.message);
+  res.status(err.status || 500).json({ message: 'Internal server error' });
+});
 
 const PORT = process.env.PORT || 3000;
 

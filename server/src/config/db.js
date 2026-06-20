@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export async function initDb() {
+export default async function initDb() {
   await mongoose.connect(process.env.MONGODB_URI, {
     serverSelectionTimeoutMS: 10000
   });

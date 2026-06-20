@@ -2,10 +2,32 @@ import { Router } from 'express';
 import parse_npm from '../parsers/npm.js';
 import buildGraph from '../controllers/packageGraph.js';
 import normalizeGraph from '../controllers/normalizeGraph.js';
+import { authenticateToken } from '../config/auth.js';
+import multer from 'multer';
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 7 * 1024 * 1024 },
+    fileFilter: (req, file, callBack) => {
+    const allowed = [
+      'package-lock.json',
+      // 'requirements.txt',
+      // 'poetry.lock',
+      // 'Cargo.lock',
+      // 'go.mod',
+      // 'go.sum'
+    ]
+    if (allowed.includes(file.originalname)) {
+      callBack(null, true)
+    } else {
+      callBack(new Error('Unsupported file type'))
+    }
+  }
+});
 
 const uploadRouter = Router();
 
-uploadRouter.post('/', async (req, res) => {
+uploadRouter.post('/',  upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'package-lock.json file is required' });
     }
@@ -44,7 +66,7 @@ uploadRouter.post('/pkg', async (req, res) => {
     });
 })
 
-uploadRouter.post('/save', (req, res) => {
+uploadRouter.post('/save', authenticateToken, (req, res) => {
     res.status(501).json({ error: 'Saving graphs is not implemented yet' });
 });
 

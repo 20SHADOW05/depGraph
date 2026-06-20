@@ -2,13 +2,16 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import HeaderSearch from '../components/HeaderSearch.jsx';
 import Logo from '../components/Logo.jsx';
+import { ProfileIcon } from './HomePage.jsx';
 import { FiSidebar } from "react-icons/fi";
 import DependencyGraph from '../components/graph/DependencyGraph.jsx';
 import Sidebar from '../components/sidebar/Sidebar.jsx';
 import { fetchPackageGraph } from '../lib/api.js';
+import { userCheck } from '../lib/api.js';
 import '../styles/header.css';
 import '../styles/graph.css';
 import '../styles/sidebar.css';
+import '../styles/profile.css';
 
 function filterGraph(graph, visibility) {
 	const nodes = graph.nodes || [];
@@ -55,6 +58,7 @@ export default function GraphPage() {
 	const location = useLocation();
 	const [searchParams] = useSearchParams();
 	const pkgName = searchParams.get('pkg') || '';
+	const { user, loading: authLoading } = userCheck();
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [graph, setGraph] = useState(location.state?.graph || { nodes: [], edges: [], source: null, rootName: pkgName });
 	const [selectedNode, setSelectedNode] = useState(null);
@@ -88,15 +92,6 @@ export default function GraphPage() {
 		},
 		[navigate]
 	);
-
-	/* 
-		the below effect runs only in cases where there's no state, which are:
-		1. direct URL visit - user opens depgraph.com/graph?pkg=express in a new tab. no navigation happened, so location.state is undefined. the effect runs and fetches.
-		2. hard refresh - user is on /graph?pkg=express and hits F5. browser wipes memory including history state. location.state is gone, effect fetches again.
-		3. shared link - someone pastes the URL. same as case 1.
-		
-		cuz i know you will forget
-	*/
 
 	useEffect(() => {
 		if (!pkgName || location.state?.graph) return;
@@ -132,8 +127,16 @@ export default function GraphPage() {
 			<HeaderSearch defaultValue={pkgName} onSearch={goToGraph} />
 
 			<div className="header-right">
-			<button className="btn btn-ghost" onClick={goToLogin}>log in</button>
-			<button className="btn btn-solid" onClick={goToSignup}>sign up</button>
+			{!authLoading && (
+				user ? (
+				<ProfileIcon name={user.name} />
+				) : (
+				<>
+					<button className="btn btn-ghost" onClick={goToLogin}>log in</button>
+					<button className="btn btn-solid" onClick={goToSignup}>sign up</button>
+				</>
+				)
+			)}
 			<button
 				className={`sidebar-toggle ${sidebarOpen ? 'active' : ''}`}
 				onClick={() => setSidebarOpen((value) => !value)}

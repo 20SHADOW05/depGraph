@@ -1,6 +1,8 @@
 import { Router } from "express";
-import User from '../models/userModel.js';
-import { signToken, hashPassword } from "../config/auth";
+import { User  } from '../models/userModel.js';
+import { signToken, hashPassword, comparePassword } from "../config/auth.js";
+import passport from "passport";
+import { authenticateToken } from "../config/auth.js";
 
 const authRouter = Router();
 
@@ -34,7 +36,7 @@ authRouter.post('/signup' , async (req, res) => {
     return res.status(201).json({ message: 'Account created' });
 })
 
-authRouter.post('/login', (req, res) => {
+authRouter.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     if(!email || !password) {
@@ -64,7 +66,7 @@ authRouter.get('/google', (req, res, next) => { // redirects to google
     })(req, res, next);
 });
 
-authRouter.get("/google/callback",
+authRouter.get('/google/callback',
     passport.authenticate("google", { session: false }), (req, res, next) => { // verifies the response , attaches the user object to req
         const token = signToken(req.user); 
         res.cookie('token', token, {
@@ -73,8 +75,27 @@ authRouter.get("/google/callback",
         sameSite: 'strict',
         maxAge: 14 * 24 * 60 * 60 * 1000
         });
-        res.redirect('http://localhost:5173/dashboard');
+        res.redirect('http://localhost:5173/');
     }
 )
+
+authRouter.get('/me', authenticateToken, async (req, res) => {
+    return res.status(200).json({ user: req.user, loading: false });
+})
+
+authRouter.post('/logout', (req, res) => {
+  res.clearCookie('token');
+  return res.status(200).json({ message: 'Logged out' });
+});
+
+authRouter.get('/saved', authenticateToken, async (req, res) => {
+  const graphs = await Graph.find({ user: req.user.sub }).sort({ createdAt: -1 });
+  return res.json({ graphs });
+});
+
+authRouter.delete('/saved', authenticateToken, async (req, res) => {
+  await Graph.deleteMany({ user: req.user.sub });
+  return res.status(200).json({ message: 'Cleared' });
+});
 
 export default authRouter;
