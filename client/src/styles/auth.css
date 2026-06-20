@@ -67,7 +67,6 @@
   max-width: 420px;
   background: var(--bg);
   border: 1px solid var(--bdr);
-  border-radius: 16px;
   padding: 40px;
   animation: fadeUp 0.35s ease both;
 }
@@ -108,7 +107,6 @@
   height: 42px;
   background: var(--bg3);
   border: 1px solid var(--bdr2);
-  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -184,7 +182,6 @@
   height: 42px;
   background: var(--bg3);
   border: 1px solid var(--bdr);
-  border-radius: 9px;
   padding: 0 14px;
   font-size: 14px;
   color: var(--tx);
@@ -263,7 +260,6 @@
 .pw-bar {
   flex: 1;
   height: 3px;
-  border-radius: 2px;
   background: var(--bg5);
   transition: background 0.25s ease;
 }
@@ -289,7 +285,6 @@
   margin-top: 6px;
   background: var(--tx);
   color: var(--bg);
-  border-radius: 9px;
   border: none;
   font-size: 14px;
   font-weight: 600;
@@ -335,7 +330,6 @@
   margin-bottom: 18px;
   background: rgba(232, 115, 115, 0.07);
   border: 1px solid rgba(232, 115, 115, 0.2);
-  border-radius: 8px;
   font-size: 12px;
   color: var(--red);
 }
@@ -372,6 +366,5 @@
 
   .auth-form-wrap {
     padding: 32px 24px;
-    border-radius: 14px;
   }
 }

@@ -8,6 +8,7 @@ export function signToken(user) {
   return jwt.sign(
     {
       sub: user._id.toString(),
+	  name: user.name || user.displayName,
       email: user.email
     },
     process.env.JWT_SECRET,

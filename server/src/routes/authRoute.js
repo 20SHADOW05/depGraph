@@ -33,7 +33,7 @@ authRouter.post('/signup' , async (req, res) => {
         maxAge: 14 * 24 * 60 * 60 * 1000 // match 14d jwt expiry
     });
 
-    return res.status(201).json({ message: 'Account created' });
+    res.redirect('http://localhost:5173/graph');
 })
 
 authRouter.post('/login', async (req, res) => {
@@ -56,7 +56,7 @@ authRouter.post('/login', async (req, res) => {
         maxAge: 14 * 24 * 60 * 60 * 1000 
     });
 
-    return res.status(200).json({ message: 'Login successful' });
+    res.redirect('http://localhost:5173/graph');
 })
 
 authRouter.get('/google', (req, res, next) => { // redirects to google
@@ -75,7 +75,7 @@ authRouter.get('/google/callback',
         sameSite: 'strict',
         maxAge: 14 * 24 * 60 * 60 * 1000
         });
-        res.redirect('http://localhost:5173/');
+        res.redirect('http://localhost:5173/graph');
     }
 )
 
@@ -86,11 +86,6 @@ authRouter.get('/me', authenticateToken, async (req, res) => {
 authRouter.post('/logout', (req, res) => {
   res.clearCookie('token');
   return res.status(200).json({ message: 'Logged out' });
-});
-
-authRouter.get('/saved', authenticateToken, async (req, res) => {
-  const graphs = await Graph.find({ user: req.user.sub }).sort({ createdAt: -1 });
-  return res.json({ graphs });
 });
 
 authRouter.delete('/saved', authenticateToken, async (req, res) => {

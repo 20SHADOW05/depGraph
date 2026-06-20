@@ -5,9 +5,9 @@ import Logo from '../components/Logo.jsx';
 import { ProfileIcon } from './HomePage.jsx';
 import { FiSidebar } from "react-icons/fi";
 import DependencyGraph from '../components/graph/DependencyGraph.jsx';
+// import GraphTable from '../components/graph/GraphTable.jsx'; // should be implemented if possible
 import Sidebar from '../components/sidebar/Sidebar.jsx';
-import { fetchPackageGraph } from '../lib/api.js';
-import { userCheck } from '../lib/api.js';
+import { fetchPackageGraph, saveGraphRequest, userCheck } from '../lib/api.js';
 import '../styles/header.css';
 import '../styles/graph.css';
 import '../styles/sidebar.css';
@@ -60,11 +60,14 @@ export default function GraphPage() {
 	const pkgName = searchParams.get('pkg') || '';
 	const { user, loading: authLoading } = userCheck();
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [viewMode, setViewMode] = useState('graph'); // 'graph' | 'table'
 	const [graph, setGraph] = useState(location.state?.graph || { nodes: [], edges: [], source: null, rootName: pkgName });
 	const [selectedNode, setSelectedNode] = useState(null);
 	const [showDevDependencies, setShowDevDependencies] = useState(false);
 	const [showOptionalDependencies, setShowOptionalDependencies] = useState(false);
 	const [status, setStatus] = useState('');
+	const [saving, setSaving] = useState(false);
+	const [saveError, setSaveError] = useState('');
 	const visibleGraph = useMemo(
 		() => filterGraph(graph, { showDevDependencies, showOptionalDependencies }),
 		[graph, showDevDependencies, showOptionalDependencies]
@@ -92,6 +95,24 @@ export default function GraphPage() {
 		},
 		[navigate]
 	);
+
+	async function handleSave() {
+		if (!user) {
+			navigate('/login');
+			return;
+		}
+		if (!graph.nodes?.length) return;
+
+		setSaving(true);
+		setSaveError('');
+		try {
+			await saveGraphRequest(graph);
+		} catch (err) {
+			setSaveError(err.message);
+		} finally {
+			setSaving(false);
+		}
+	}
 
 	useEffect(() => {
 		if (!pkgName || location.state?.graph) return;
@@ -127,24 +148,33 @@ export default function GraphPage() {
 			<HeaderSearch defaultValue={pkgName} onSearch={goToGraph} />
 
 			<div className="header-right">
-			{!authLoading && (
-				user ? (
-				<ProfileIcon name={user.name} />
-				) : (
-				<>
-					<button className="btn btn-ghost" onClick={goToLogin}>log in</button>
-					<button className="btn btn-solid" onClick={goToSignup}>sign up</button>
-				</>
-				)
-			)}
-			<button
-				className={`sidebar-toggle ${sidebarOpen ? 'active' : ''}`}
-				onClick={() => setSidebarOpen((value) => !value)}
-				title="Toggle sidebar"
-				aria-label="Toggle sidebar"
-			>
-				<FiSidebar />
-			</button>
+				<div className="view-toggle">
+					<button className={`view-btn ${viewMode === 'graph' ? 'active' : ''}`} onClick={() => setViewMode('graph')}>graph</button>
+					<button className={`view-btn ${viewMode === 'table' ? 'active' : ''}`} onClick={() => setViewMode('table')} disabled>table</button>
+				</div>
+
+				<button className="btn-save" onClick={handleSave} disabled={saving || !graph.nodes?.length} title={saveError || undefined}>
+					{saving ? 'saving…' : 'save'}
+				</button>
+
+				{!authLoading && (
+					user ? (
+					<ProfileIcon name={user.name} />
+					) : (
+					<>
+						<button className="btn btn-ghost" onClick={goToLogin}>log in</button>
+						<button className="btn btn-solid" onClick={goToSignup}>sign up</button>
+					</>
+					)
+				)}
+				<button
+					className={`sidebar-toggle ${sidebarOpen ? 'active' : ''}`}
+					onClick={() => setSidebarOpen((value) => !value)}
+					title="Toggle sidebar"
+					aria-label="Toggle sidebar"
+				>
+					<FiSidebar />
+				</button>
 			</div>
 		</header>
 
@@ -155,6 +185,8 @@ export default function GraphPage() {
 				<Logo size={48} />
 				<p>{status}</p>
 				</div>
+			) : viewMode === 'table' ? (
+				<GraphTable graph={visibleGraph} />
 			) : (
 				<DependencyGraph graph={visibleGraph} selectedNodeId={selectedNode?.id || null} onNodeSelect={setSelectedNode} />
 			)}

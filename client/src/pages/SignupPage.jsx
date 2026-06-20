@@ -112,7 +112,7 @@ export default function SignupPage() {
 
 			<button className="btn-google" onClick={handleGoogle} type="button">
 		  	<FcGoogle size={17} />
-		  	Sign up with Google
+		  	Continue with Google
 			</button>
 
 			<div className="auth-divider">or sign up with email</div>

@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiLogOut, FiTrash2, FiLock } from 'react-icons/fi';
-import { userCheck } from '../lib/api.js';
-import { fetchMyGraphs, clearAllGraphsRequest, logoutPost } from '../lib/api.js';
+import { userCheck, fetchMyGraphs, clearAllGraphsRequest, logoutPost } from '../lib/api.js';
 import Logo from '../components/Logo.jsx';
 import '../styles/profile.css';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const { user, loading: authLoading, logout } = userCheck();
+  const { user, loading: authLoading } = userCheck();
   const [graphs, setGraphs] = useState([]);
   const [graphsLoading, setGraphsLoading] = useState(true);
   const [busyAction, setBusyAction] = useState(false);
@@ -40,12 +39,8 @@ export default function ProfilePage() {
   }
 
   async function handleLogout() {
-    try {
-      await logoutPost();
-    } finally {
-      logout();
-      navigate('/');
-    }
+    await logoutPost();
+    window.location.href = '/';
   }
 
   function handleChangePassword() {
@@ -60,26 +55,23 @@ export default function ProfilePage() {
     );
   }
 
-  const initial = user.name?.trim()?.[0]?.toUpperCase() || '?';
-
   return (
     <div className="profile-shell">
       <div className="profile-bg-grid" />
 
-      <div className="profile-card">
+      <div className="profile-content">
         <button className="profile-back" onClick={() => navigate('/')}>← back</button>
-
-        <div className="profile-avatar">{initial}</div>
 
         <h1 className="profile-name">{user.name}</h1>
         <p className="profile-email">{user.email}</p>
+        <div className="profile-divider" />
 
         <div className="profile-section">
           <div className="profile-section-header">
             <h2>Saved graphs</h2>
             {graphs.length > 0 && (
               <button className="btn-text-danger" onClick={handleClearGraphs} disabled={busyAction}>
-                <FiTrash2 size={13} /> clear all
+                <FiTrash2 size={13} /> CLEAR ALL
               </button>
             )}
           </div>

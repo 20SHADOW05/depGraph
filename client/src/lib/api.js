@@ -89,3 +89,15 @@ export async function clearAllGraphsRequest() {
 export async function logoutPost() {
   await fetch(`${API_BASE}/auth/logout`, { method: 'POST', credentials: 'include' });
 }
+
+export async function saveGraphRequest(graph) {
+  const res = await fetch(`${API_BASE}/graph/save`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(graph)
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || data.error || 'Failed to save graph');
+  return data;
+}

@@ -5,29 +5,26 @@
   border-radius: 50%;
   background: var(--teal);
   border: none;
-  color: #06150f;
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 700;
+  color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.15s, transform 0.15s;
+  transition: background 0.15s, box-shadow 0.15s;
 }
 
 .profile-icon-btn:hover {
   background: var(--teal2);
-  transform: scale(1.05);
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.18);
 }
 
 /* ── profile page ── */
 .profile-shell {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
+  padding: 70px 20px 50px;
   position: relative;
   overflow: hidden;
   background:
@@ -54,54 +51,47 @@
   background: #070a12;
 }
 
-.profile-card {
-  width: min(480px, 100%);
-  position: relative;
-  z-index: 1;
+.profile-content {
+  width: min(640px, 100%);
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background: rgba(12, 18, 32, 0.82);
-  border: 1px solid var(--bdr2);
-  border-radius: 16px;
-  padding: 40px 36px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(20px);
+  position: relative;
+  z-index: 1;
 }
 
 .profile-back {
   align-self: flex-start;
   background: none;
   border: none;
-  color: var(--tx3);
+  color: var(--tx2);
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
   transition: color 0.15s;
 }
 
 .profile-back:hover { color: var(--teal2); }
 
-.profile-avatar {
-  width: 92px;
-  height: 92px;
-  border-radius: 50%;
-  background: var(--teal);
-  color: #06150f;
-  font-family: var(--mono);
-  font-size: 36px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 18px;
+.profile-name { margin: 0; font-size: 26px; font-weight: 600; color: var(--tx); }
+.profile-email { margin: 6px 0 0; font-size: 13px; color: var(--tx2); font-family: var(--mono); }
+
+.profile-divider {
+  width: 100%;
+  height: 1.25px;
+  background: var(--bdr2);
+  margin: 28px 0;
 }
 
-.profile-name { margin: 0; font-size: 22px; font-weight: 600; color: var(--tx); }
-.profile-email { margin: 4px 0 28px; font-size: 13px; color: var(--tx3); font-family: var(--mono); }
-
-.profile-section { width: 100%; margin-bottom: 24px; }
+.profile-section {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-bottom: 28px;
+}
 
 .profile-section-header {
   display: flex;
@@ -126,7 +116,7 @@
   background: none;
   border: none;
   color: #f87171;
-  font-size: 11px;
+  font-size: 13px;
   font-family: var(--mono);
   cursor: pointer;
 }
@@ -143,13 +133,13 @@
 }
 
 .saved-graph-list {
+  flex: 1;
   list-style: none;
   margin: 0;
   padding: 0;
-  max-height: 220px;
   overflow-y: auto;
-  border: 1px solid var(--bdr);
-  border-radius: 10px;
+  border: 1px solid var(--tx3);
+  
 }
 
 .saved-graph-item {
@@ -157,7 +147,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 11px 14px;
-  border-bottom: 1px solid var(--bdr);
+  border-bottom: 1px solid var(--tx3);
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -165,10 +155,10 @@
 .saved-graph-item:last-child { border-bottom: none; }
 .saved-graph-item:hover { background: rgba(29, 158, 117, 0.06); }
 
-.saved-graph-name { font-family: var(--mono); font-size: 13px; color: var(--tx); }
-.saved-graph-date { font-size: 11px; color: var(--tx3); }
+.saved-graph-name { font-family: var(--mono); font-size: 14px; color: var(--tx); }
+.saved-graph-date { font-size: 13px; color: var(--tx2); }
 
-.profile-error { width: 100%; font-size: 12px; color: #f87171; margin: 0 0 16px; }
+.profile-error { width: 100%; font-size: 13px; color: #f87171; margin: 0 0 16px; }
 
 .profile-actions { width: 100%; display: flex; flex-direction: column; gap: 10px; }
 
@@ -178,7 +168,6 @@
   justify-content: center;
   gap: 8px;
   height: 40px;
-  border-radius: 9px;
   font-size: 13px;
   font-family: var(--mono);
   cursor: pointer;

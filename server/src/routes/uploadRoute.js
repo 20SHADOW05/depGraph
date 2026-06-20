@@ -3,24 +3,26 @@ import parse_npm from '../parsers/npm.js';
 import buildGraph from '../controllers/packageGraph.js';
 import normalizeGraph from '../controllers/normalizeGraph.js';
 import { authenticateToken } from '../config/auth.js';
+import { Graph } from '../models/graphModel.js'
 import multer from 'multer';
+import { Types } from "mongoose";
 
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 7 * 1024 * 1024 },
     fileFilter: (req, file, callBack) => {
     const allowed = [
-      'package-lock.json',
-      // 'requirements.txt',
-      // 'poetry.lock',
-      // 'Cargo.lock',
-      // 'go.mod',
-      // 'go.sum'
+        'package-lock.json',
+        // 'requirements.txt',
+        // 'poetry.lock',
+        // 'Cargo.lock',
+        // 'go.mod',
+        // 'go.sum'
     ]
     if (allowed.includes(file.originalname)) {
-      callBack(null, true)
+        callBack(null, true)
     } else {
-      callBack(new Error('Unsupported file type'))
+        callBack(new Error('Unsupported file type'))
     }
   }
 });
@@ -66,8 +68,33 @@ uploadRouter.post('/pkg', async (req, res) => {
     });
 })
 
-uploadRouter.post('/save', authenticateToken, (req, res) => {
-    res.status(501).json({ error: 'Saving graphs is not implemented yet' });
+uploadRouter.post('/save', authenticateToken, async (req, res, next) => {
+    try {
+        const { source, rootName, fileName, nodes, edges } = req.body;
+
+        if (!rootName || !Array.isArray(nodes) || !Array.isArray(edges)) {
+            return res.status(400).json({ message: 'Invalid graph data' });
+        }
+
+        const objectId = new Types.ObjectId(req.user.sub);
+        const graph = await Graph.create({
+            user: objectId,
+            source,
+            rootName,
+            fileName: fileName || null,
+            nodes,
+            edges
+        });
+
+        return res.status(201).json({ message: 'Graph saved', graph });
+    } catch (err) {
+        next(err);
+    }
+});
+
+uploadRouter.get('/saved', authenticateToken, async (req, res) => {
+    const graphs = await Graph.find({ user: req.user.sub }).sort({ createdAt: -1 });
+     return res.json({ graphs });
 });
 
 export default uploadRouter;

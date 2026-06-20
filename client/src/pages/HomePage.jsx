@@ -1,12 +1,8 @@
-// import Logo from '../components/Logo.jsx';
-// import SearchPanel from '../components/SearchPanel.jsx';
-// import '../styles/landing.css';
-
 import { useNavigate } from 'react-router-dom';
+import { GoPerson } from "react-icons/go";
 
 export function ProfileIcon({ name }) {
   const navigate = useNavigate();
-  const initial = name?.trim()?.[0]?.toUpperCase() || '?';
 
   return (
     <button
@@ -15,29 +11,10 @@ export function ProfileIcon({ name }) {
       aria-label="Go to profile"
       title="Profile"
     >
-      {initial}
+      <GoPerson size={18}/>
     </button>
   );
 }
-
-// export default function HomePage() {
-//   return (
-//     <main className="landing">
-//       <div className="landing-grid" aria-hidden="true" />
-//       <div className="landing-shell">
-//         <div className="landing-logo">
-//           <Logo size={66} />
-//           <div className="landing-wordmark">
-//             <span className="landing-dep">dep</span>
-//             <span className="landing-graph">graph</span>
-//           </div>
-//         </div>
-//         <p className="landing-tagline">visualize dependency trees from package names or lockfiles</p>
-//         <SearchPanel />
-//       </div>
-//     </main>
-//   );
-// }
 
 import { userCheck } from '../lib/api.js';
 import Logo from '../components/Logo.jsx';

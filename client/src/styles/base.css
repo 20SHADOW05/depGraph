@@ -64,7 +64,6 @@ a {
 .btn {
   height: 32px;
   padding: 0 14px;
-  border-radius: 7px;
   border: none;
   font-size: 13px;
   transition: all 0.15s;
@@ -73,11 +72,11 @@ a {
 .btn-ghost {
   background: transparent;
   color: var(--tx2);
-  border: 1px solid var(--bdr);
+  border: 1px solid var(--tx3);
 }
 
 .btn-ghost:hover {
-  border-color: var(--bdr2);
+  border-color: var(--tx2);
   color: var(--tx);
 }
 
