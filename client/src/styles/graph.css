@@ -53,7 +53,6 @@
   overflow: hidden;
   background: #f8fafc;
   border: 2px solid #64748b;
-  border-radius: 8px;
   color: #111827;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
   transition: opacity 0.15s, filter 0.15s, box-shadow 0.15s;
@@ -110,8 +109,8 @@
   align-items: center;
   justify-content: center;
   padding: 10px 14px 10px 20px;
-  font-family: var(--mono);
-  font-size: 15px;
+  font-family: var(--noto);
+  font-size: 16px;
   font-weight: 700;
   text-align: center;
   overflow: hidden;

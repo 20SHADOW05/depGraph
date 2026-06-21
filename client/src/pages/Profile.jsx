@@ -99,7 +99,7 @@ export default function ProfilePage() {
         {error && <p className="profile-error">{error}</p>}
 
         <div className="profile-actions">
-          <button className="btn-secondary" onClick={handleChangePassword}>
+          <button className="btn-secondary" onClick={handleChangePassword} disabled>
             <FiLock size={14} /> Change password
           </button>
           <button className="btn-logout" onClick={handleLogout}>

@@ -117,7 +117,7 @@
   border: none;
   color: #f87171;
   font-size: 13px;
-  font-family: var(--mono);
+  font-family: var(--noto);
   cursor: pointer;
 }
 
