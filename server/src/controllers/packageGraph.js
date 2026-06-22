@@ -26,23 +26,23 @@ class Queue {
     }
 }
 
-// const cache = new Map();
+const cache = new Map();
 
-// async function fetchPackageDoc(name) {
-//     if (cache.has(name)) return cache.get(name);
+async function fetchPackageDoc(name) {
+    if (cache.has(name)) return cache.get(name);
 
-//     const res = await axios.get(
-//         `https://registry.npmjs.org/${encodeURIComponent(name)}`,
-//         {
-//             headers: {
-//                 Accept: "application/vnd.npm.install-v1+json",
-//             },
-//         }
-//     );
+    const res = await axios.get(
+        `https://registry.npmjs.org/${encodeURIComponent(name)}`,
+        {
+            headers: {
+                Accept: "application/vnd.npm.install-v1+json",
+            },
+        }
+    );
 
-//     cache.set(name, res.data);
-//     return res.data;
-// }
+    cache.set(name, res.data);
+    return res.data;
+}
 
 /* 
 
@@ -100,6 +100,8 @@ to compute: 19.1.1
 > depGraph reconstructs the dependency graph using npm's semver rules. Since dependencies are declared as version ranges rather than exact versions, the application resolves each range to the highest compatible published version before expanding the graph. This ensures that every node represents a concrete package version rather than an abstract version constraint.
 
 then i got to know about public CDNs for npm packages like jsDelivr and UNPKG. they resolve the version for us and send tiny responses. so i will be using jsDelivr. if its down, i will fetch from npm registry. also i will be using LRU cache.
+
+just now tested the public CDNs, they are too slow. getting a response takes 5-7 sec and for high packument size packages like "next", it returns an error message most of the time. guess using npm registry is better and reliable, should be manageable if caching is improved
 
 */
 
