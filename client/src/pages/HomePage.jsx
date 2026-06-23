@@ -4,8 +4,6 @@ import { useAuth } from '../lib/authContext.jsx';
 import Logo from '../components/Logo.jsx';
 import SearchPanel from '../components/SearchPanel.jsx';
 import '../styles/landing.css';
-import '../styles/header.css'; // reuses .btn / .btn-ghost / .btn-solid
-import '../styles/profile.css'; // reuses .profile-icon-btn
 
 export function ProfileIcon({ name }) {
   const navigate = useNavigate();

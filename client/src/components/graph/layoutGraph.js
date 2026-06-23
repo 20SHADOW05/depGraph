@@ -100,7 +100,9 @@ export async function layoutGraph(graph) {
 }
 
 export function getConnectedPathIds(graph, selectedNodeId) {
-  if (!selectedNodeId) return { nodeRoles: new Map(), edgeRoles: new Map() };
+  if (!selectedNodeId) {
+    return { nodeRoles: new Map(), edgeRoles: new Map() };
+  }
 
   const parents = new Map();
   const children = new Map();
@@ -115,32 +117,17 @@ export function getConnectedPathIds(graph, selectedNodeId) {
 
   const nodeRoles = new Map([[selectedNodeId, 'selected-path']]);
   const edgeRoles = new Map();
-  const upstreamQueue = [selectedNodeId];
 
-  while (upstreamQueue.length) {
-    const currentId = upstreamQueue.shift();
-
-    for (const edge of parents.get(currentId) || []) {
-      edgeRoles.set(edge.id, 'ancestor-path');
-      if (!nodeRoles.has(edge.source)) {
-        nodeRoles.set(edge.source, 'ancestor-path');
-        upstreamQueue.push(edge.source);
-      }
-    }
+  // immediate parents
+  for (const edge of parents.get(selectedNodeId) || []) {
+    edgeRoles.set(edge.id, 'ancestor-path');
+    nodeRoles.set(edge.source, 'ancestor-path');
   }
 
-  const downstreamQueue = [selectedNodeId];
-
-  while (downstreamQueue.length) {
-    const currentId = downstreamQueue.shift();
-
-    for (const edge of children.get(currentId) || []) {
-      edgeRoles.set(edge.id, 'dependency-path');
-      if (!nodeRoles.has(edge.target)) {
-        nodeRoles.set(edge.target, 'dependency-path');
-        downstreamQueue.push(edge.target);
-      }
-    }
+  // immediate children
+  for (const edge of children.get(selectedNodeId) || []) {
+    edgeRoles.set(edge.id, 'dependency-path');
+    nodeRoles.set(edge.target, 'dependency-path');
   }
 
   return { nodeRoles, edgeRoles };

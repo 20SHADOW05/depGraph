@@ -12,7 +12,6 @@ import { useAuth } from '../lib/authContext.jsx';
 import '../styles/header.css';
 import '../styles/graph.css';
 import '../styles/sidebar.css';
-import '../styles/profile.css';
 
 function filterGraph(graph, visibility) {
 	const nodes = graph.nodes || [];

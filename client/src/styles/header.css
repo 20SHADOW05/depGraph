@@ -99,14 +99,14 @@
   align-items: center;
   justify-content: center;
   background: transparent;
-  border: 1px solid var(--bdr);
+  border: 1px solid var(--tx3);
   color: var(--tx);
   flex-shrink: 0;
   transition: all 0.15s;
 }
 
 .sidebar-toggle:hover {
-  border-color: var(--bdr2);
+  border-color: var(--tx2);
   color: var(--tx);
 }
 
@@ -187,4 +187,41 @@
 .btn-save:disabled {
   opacity: 0.5;
   cursor: wait;
+}
+
+.header-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 460px;
+}
+
+.header-search {
+  flex: 1;
+  max-width: unset; /* override the old 400px cap */
+}
+
+.header-search-or {
+  color: var(--tx2);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.header-upload-btn {
+  height: 34px;
+  width: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg3);
+  border: 1px solid var(--bdr);
+  color: var(--tx2);
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.header-upload-btn:hover {
+  border-color: var(--bdr2);
+  color: var(--tx);
 }

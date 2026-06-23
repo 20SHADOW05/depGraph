@@ -55,7 +55,7 @@ export default function SearchPanel() {
 		<>
 			<div className="landing-card">
 				<div className="search-row">
-					<IoMdSearch />
+					<IoMdSearch size={20}/>
 					<input
 						className="search-input"
 						placeholder="package name, e.g. express"
@@ -74,7 +74,7 @@ export default function SearchPanel() {
 				<div className="upload-wrap">
 					<input ref={fileRef} type="file" accept=".json" className="hidden-input" onChange={handleFile} />
 					<button className="upload-btn" onClick={() => fileRef.current?.click()} disabled={busy}>
-						<MdOutlineFileUpload />
+						<MdOutlineFileUpload size={20}/>
 						upload package-lock.json
 					</button>
 				</div>

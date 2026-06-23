@@ -1,4 +1,6 @@
-const parse_npm = (fileContent) => {
+import { packageVuln } from '../controllers/packageGraph.js';
+
+export const parse_npm = (fileContent) => {
     let parsedFile;
 
     try {
@@ -170,4 +172,40 @@ const parse_npm = (fileContent) => {
     };
 };
 
-export default parse_npm;
+export const buildGraph_npmParse = async (fileContent) => {
+    const graph = parse_npm(fileContent);
+
+    const { nodes, edges } = graph;
+    
+    const queries = nodes
+        .filter(
+            (node) =>
+                node.type === "package" &&
+                node.name &&
+                node.version
+        )
+        .map((node) => ({
+            package: {
+                ecosystem: "npm",
+                name: node.name,
+            },
+            version: node.version,
+        }));
+
+    if (queries.length > 0) {
+        const osvData = await packageVuln({ queries });
+
+        let queryIndex = 0;
+
+        for (const node of nodes) {
+            if (node.type !== "package") continue;
+            node.vuln = osvData.results?.[queryIndex]?.vulns?.length > 0;
+            queryIndex++;
+        }
+    }
+
+    return {
+        nodes,
+        edges,
+    };
+}

@@ -64,8 +64,8 @@ export default function LoginPage() {
 			<div className="auth-form-header">
 			<h1 className="auth-form-title">Welcome back</h1>
 			<p className="auth-form-sub">
-				No account?{' '}
-				<Link to="/signup">Create one</Link>
+				don't have an account?{' '}
+				<Link to="/signup">Create</Link>
 			</p>
 			</div>
 

@@ -24,10 +24,10 @@
   --tx: #e2e8f0;
   --tx2: #94a3b8;
   --tx3: #4a5568;
-  --red: #e87373;
+  --red: #ff0000;
   --amber: #f5a623;
   --blue: #7dd3fc;
-  --sidebar-w: 318px;
+  --sidebar-w: 480px; /* prev 318 */
   --header-h: 56px;
   --mono: 'DM Mono', monospace;
   --sans: 'noto', 'DM Sans', system-ui, sans-serif;
@@ -104,4 +104,24 @@ a {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* ── profile icon (used in header + landing nav) ── */
+.profile-icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: none;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.profile-icon-btn:hover {
+  background: var(--teal2);
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.18);
 }

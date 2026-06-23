@@ -7,6 +7,7 @@ function normalizeNode(node, source, requestedRangesByTarget) {
         version: node.version || null,
         type,
         source,
+        vuln: node.vuln,
         isDev: node.isDev === true,
     };
 

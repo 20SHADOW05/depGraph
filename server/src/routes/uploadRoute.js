@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import parse_npm from '../parsers/npm.js';
+import { parse_npm, buildGraph_npmParse } from '../parsers/npm.js';
 import buildGraph from '../controllers/packageGraph.js';
 import normalizeGraph from '../controllers/normalizeGraph.js';
 import { authenticateToken } from '../config/auth.js';
@@ -35,7 +35,7 @@ uploadRouter.post('/',  upload.single('file'), async (req, res) => {
     }
 
     const fileContent = req.file.buffer.toString('utf-8');
-    const packages = parse_npm(fileContent);
+    const packages = await buildGraph_npmParse(fileContent);
     const graph = normalizeGraph({
         ...packages,
         source: 'lockfile',

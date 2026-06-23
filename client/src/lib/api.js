@@ -101,21 +101,3 @@ export async function saveGraphRequest(graph) {
   if (!res.ok) throw new Error(data.message || data.error || 'Failed to save graph');
   return data;
 }
-
-export const packageScores = async (packages) => {
-    const res = await fetch('https://api.npms.io/v2/package/mget', {
-        method: 'POST',
-    	headers: { 'Content-Type': 'application/json' },
-    	body: packages
-    })
-    return res.data;
-}
-
-export const packageVuln = async (packages) => {
-    const res = await fetch('https://api.osv.dev/v1/querybatch', {
-        method: 'POST',
-    	headers: { 'Content-Type': 'application/json' },
-    	body: packages
-    })
-    return res.data;
-}

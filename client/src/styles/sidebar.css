@@ -345,3 +345,230 @@
     z-index: 5;
   }
 }
+
+/* ── empty state ── */
+.pkg-empty {
+    color: var(--tx3);
+    font-size: 13px;
+}
+
+/* ── toggle note ── */
+.toggle-note {
+    margin-top: 10px;
+    color: var(--tx3);
+    font-size: 11px;
+    line-height: 1.5;
+    border-left: 2px solid var(--bdr2);
+    padding-left: 8px;
+}
+
+/* ── loading ── */
+.sb-loading {
+    color: var(--tx3);
+    font-size: 12px;
+    font-family: var(--mono);
+}
+
+/* ── score / health side by side ── */
+.score-health-grid {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--bdr);
+}
+
+.sh-col {
+    flex: 1;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sh-col-head {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tx3);
+    margin-bottom: 4px;
+}
+
+.sh-divider {
+    width: 1px;
+    background: var(--bdr);
+    flex-shrink: 0;
+}
+
+.sh-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+}
+
+.sh-key {
+    color: var(--tx3);
+    font-size: 11px;
+}
+
+.sh-val {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--tx2);
+}
+
+.sh-overall {
+    color: var(--teal2);
+    font-weight: 600;
+}
+
+.sh-critical { color: #c084fc; }
+.sh-high     { color: var(--red); }
+.sh-medium   { color: var(--amber); }
+
+.sh-na {
+    color: var(--tx3);
+    font-size: 11px;
+    font-family: var(--mono);
+}
+
+/* ── vulnerability count badge ── */
+.vuln-count {
+    margin-left: 6px;
+    padding: 1px 5px;
+    background: rgba(232, 115, 115, 0.15);
+    color: var(--red);
+    font-size: 9px;
+    font-family: var(--mono);
+}
+
+/* ── vulnerability table ── */
+.vuln-none {
+    color: var(--tx3);
+    font-size: 12px;
+    font-family: var(--mono);
+}
+
+.vuln-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--bdr);
+}
+
+.vuln-thead {
+    display: grid;
+    grid-template-columns: 68px 1fr 56px;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--bdr);
+    color: var(--tx3);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.vuln-row-wrap {
+    border-bottom: 1px solid var(--bdr);
+}
+
+.vuln-row-wrap:last-child {
+    border-bottom: none;
+}
+
+.vuln-row {
+    display: grid;
+    grid-template-columns: 68px 1fr 56px;
+    gap: 8px;
+    align-items: center;
+    padding: 7px 10px;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.vuln-row:hover,
+.vuln-row-open {
+    background: var(--bg3);
+}
+
+.vuln-sev-cell {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 5px;
+    text-align: center;
+}
+
+.sev-critical { background: rgba(192, 132, 252, 0.12); color: #c084fc; }
+.sev-high     { background: rgba(232, 115, 115, 0.12); color: var(--red); }
+.sev-medium   { background: rgba(245, 166, 35, 0.12);  color: var(--amber); }
+.sev-low      { background: rgba(29, 158, 117, 0.12);  color: var(--teal2); }
+.sev-unknown  { background: var(--bg4); color: var(--tx3); }
+
+.vuln-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--tx2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vuln-fixed {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--tx3);
+    text-align: right;
+}
+
+/* ── expanded vuln detail ── */
+.vuln-detail {
+    padding: 8px 10px 10px;
+    background: var(--bg2);
+    border-top: 1px solid var(--bdr);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.vd-row {
+    display: grid;
+    grid-template-columns: 68px 1fr;
+    gap: 8px;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.vd-key {
+    color: var(--tx3);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-top: 1px;
+}
+
+.vd-val {
+    color: var(--tx2);
+    font-family: var(--mono);
+    font-size: 11px;
+    word-break: break-word;
+}
+
+.vd-refs .vd-val {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.vd-ref-link {
+    color: var(--teal);
+    text-decoration: none;
+    font-size: 11px;
+}
+
+.vd-ref-link:hover {
+    color: var(--teal2);
+    text-decoration: underline;
+}
