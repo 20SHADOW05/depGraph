@@ -1,5 +1,6 @@
 import axios from "axios";
 import semver from "semver";
+import { LRUCache } from "lru-cache";
 
 class Queue {
     constructor() {
@@ -14,10 +15,8 @@ class Queue {
 
     dequeue() {
         if (this.isEmpty()) return null;
-
         const value = this.items[this.head];
         delete this.items[this.head++];
-
         return value;
     }
 
@@ -26,7 +25,10 @@ class Queue {
     }
 }
 
-const cache = new Map();
+const cache = new LRUCache({
+    max: 500,
+    ttl: 1000 * 60 * 60,
+});
 
 async function fetchPackageDoc(name) {
     if (cache.has(name)) return cache.get(name);
@@ -107,9 +109,7 @@ just now tested the public CDNs, they are too slow. getting a response takes 5-7
 
 function resolveVersion(doc, range) {
     if (doc["dist-tags"]?.[range]) return doc["dist-tags"][range];
-
     if (doc.versions?.[range]) return range;
-
     return semver.maxSatisfying(Object.keys(doc.versions || {}), range);
 }
 

@@ -56,20 +56,20 @@ export async function loginPost(email, password) {
 	if(!res.ok) throw new Error(data.message || 'Logi failed');
 }
 
-export function userCheck() {
-	const [user, setUser] = useState(null);
-	const [loading, setLoading] = useState(true);
+// export function userCheck() {
+// 	const [user, setUser] = useState(null);
+// 	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		fetch(`${API_BASE}/auth/me`, { credentials: 'include' })
-		.then((res) => (res.ok ? res.json() : null))
-		.then((data) => setUser(data?.user || null))
-		.catch(() => setUser(null))
-		.finally(() => setLoading(false));
-	}, []);
+// 	useEffect(() => {
+// 		fetch(`${API_BASE}/auth/me`, { credentials: 'include' })
+// 		.then((res) => (res.ok ? res.json() : null))
+// 		.then((data) => setUser(data?.user || null))
+// 		.catch(() => setUser(null))
+// 		.finally(() => setLoading(false));
+// 	}, []);
 
-	return { user, loading };
-}
+// 	return { user, loading };
+// }
 
 export async function fetchMyGraphs() {
   const res = await fetch(`${API_BASE}/graph/saved`, { credentials: 'include' });
@@ -100,4 +100,22 @@ export async function saveGraphRequest(graph) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.message || data.error || 'Failed to save graph');
   return data;
+}
+
+export const packageScores = async (packages) => {
+    const res = await fetch('https://api.npms.io/v2/package/mget', {
+        method: 'POST',
+    	headers: { 'Content-Type': 'application/json' },
+    	body: packages
+    })
+    return res.data;
+}
+
+export const packageVuln = async (packages) => {
+    const res = await fetch('https://api.osv.dev/v1/querybatch', {
+        method: 'POST',
+    	headers: { 'Content-Type': 'application/json' },
+    	body: packages
+    })
+    return res.data;
 }

@@ -4,6 +4,7 @@ import GraphPage from './pages/GraphPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import ProfilePage from './pages/Profile.jsx';
+import { AuthProvider } from './lib/authContext.jsx';
 
 const BASENAME = '/';
 
@@ -36,5 +37,9 @@ const router = createBrowserRouter(
 );
 
 export default function App() {
-  return <RouterProvider router={router} />;
+    return (
+        <AuthProvider>
+            <RouterProvider router={router} />
+        </AuthProvider>
+    );
 }

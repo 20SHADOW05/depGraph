@@ -1,5 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { GoPerson } from "react-icons/go";
+import { useAuth } from '../lib/authContext.jsx';
+import Logo from '../components/Logo.jsx';
+import SearchPanel from '../components/SearchPanel.jsx';
+import '../styles/landing.css';
+import '../styles/header.css'; // reuses .btn / .btn-ghost / .btn-solid
+import '../styles/profile.css'; // reuses .profile-icon-btn
 
 export function ProfileIcon({ name }) {
   const navigate = useNavigate();
@@ -16,16 +22,9 @@ export function ProfileIcon({ name }) {
   );
 }
 
-import { userCheck } from '../lib/api.js';
-import Logo from '../components/Logo.jsx';
-import SearchPanel from '../components/SearchPanel.jsx';
-import '../styles/landing.css';
-import '../styles/header.css'; // reuses .btn / .btn-ghost / .btn-solid
-import '../styles/profile.css'; // reuses .profile-icon-btn
-
 export default function HomePage() {
   const navigate = useNavigate();
-  const { user, loading } = userCheck();
+  const { user, loading } = useAuth();
 
   return (
     <main className="landing">

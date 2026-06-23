@@ -7,7 +7,8 @@ import { FiSidebar } from "react-icons/fi";
 import DependencyGraph from '../components/graph/DependencyGraph.jsx';
 // import GraphTable from '../components/graph/GraphTable.jsx'; // should be implemented if possible
 import Sidebar from '../components/sidebar/Sidebar.jsx';
-import { fetchPackageGraph, saveGraphRequest, userCheck } from '../lib/api.js';
+import { fetchPackageGraph, saveGraphRequest } from '../lib/api.js';
+import { useAuth } from '../lib/authContext.jsx';
 import '../styles/header.css';
 import '../styles/graph.css';
 import '../styles/sidebar.css';
@@ -58,7 +59,7 @@ export default function GraphPage() {
 	const location = useLocation();
 	const [searchParams] = useSearchParams();
 	const pkgName = searchParams.get('pkg') || '';
-	const { user, loading: authLoading } = userCheck();
+	const { user, loading: authLoading } = useAuth();
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [viewMode, setViewMode] = useState('graph'); // 'graph' | 'table'
 	const [graph, setGraph] = useState(location.state?.graph || { nodes: [], edges: [], source: null, rootName: pkgName });

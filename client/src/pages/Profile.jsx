@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiLogOut, FiTrash2, FiLock } from 'react-icons/fi';
-import { userCheck, fetchMyGraphs, clearAllGraphsRequest, logoutPost } from '../lib/api.js';
+import { fetchMyGraphs, clearAllGraphsRequest, logoutPost } from '../lib/api.js';
+import { useAuth } from '../lib/authContext.jsx';
 import Logo from '../components/Logo.jsx';
 import '../styles/profile.css';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const { user, loading: authLoading } = userCheck();
+  const { user, loading: authLoading } = useAuth();
   const [graphs, setGraphs] = useState([]);
   const [graphsLoading, setGraphsLoading] = useState(true);
   const [busyAction, setBusyAction] = useState(false);
