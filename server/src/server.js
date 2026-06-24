@@ -12,7 +12,7 @@ initDb();
 configurePassport();
 
 server.use(cors({
-  origin: 'http://localhost:5173',
+  origin: true,
   credentials: true
 }));
 server.use(passport.initialize());

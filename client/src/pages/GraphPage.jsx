@@ -87,11 +87,12 @@ export default function GraphPage() {
 
 	const goToGraph = useCallback(
 		({ graph: nextGraph, pkgName: nextPkgName }) => {
-		const nextPkg = nextPkgName.trim();
-		if (!nextPkg) return;
-		setGraph(nextGraph);
-		setSelectedNode(null);
-		navigate(`/graph?pkg=${encodeURIComponent(nextPkg)}`, { state: { graph: nextGraph } });
+			const nextPkg = nextPkgName.trim();
+			if (!nextPkg) return;
+			setGraph(nextGraph);
+			setSelectedNode(null);
+			setStatus('');
+			navigate(`/graph?pkg=${encodeURIComponent(nextPkg)}`, { state: { graph: nextGraph } });
 		},
 		[navigate]
 	);
@@ -115,16 +116,27 @@ export default function GraphPage() {
 	}
 
 	useEffect(() => {
-		if (!pkgName || location.state?.graph) return;
+		if (!pkgName || location.state?.graph) {
+			setStatus(''); // clear any lingering loading text
+			return;
+		}
 
+		let cancelled = false;
 		setStatus(`Loading ${pkgName}...`);
+
 		fetchPackageGraph(pkgName)
-		.then((nextGraph) => {
-			setGraph(nextGraph);
-			setSelectedNode(null);
-			setStatus('');
-		})
-		.catch((err) => setStatus(err.message));
+			.then((nextGraph) => {
+				if (cancelled) return; // prevents old fetch overwriting new graph
+				setGraph(nextGraph);
+				setSelectedNode(null);
+				setStatus('');
+			})
+			.catch((err) => {
+				if (cancelled) return;
+				setStatus(err.message);
+			});
+
+		return () => { cancelled = true; };
 	}, [location.state, pkgName]);
 
 	useEffect(() => {
@@ -133,6 +145,14 @@ export default function GraphPage() {
 
 		setSelectedNode(null);
 	}, [selectedNode, visibleGraph]);
+
+	const handleUpload = useCallback((nextGraph) => {
+		setGraph(nextGraph);
+		setSelectedNode(null);
+		setStatus('');
+		const name = nextGraph.rootName || 'lockfile';
+		navigate(`/graph?pkg=${encodeURIComponent(name)}`, { state: { graph: nextGraph } });
+	}, [navigate]);
 
 	return (
 		<div className="graph-shell">
@@ -145,7 +165,7 @@ export default function GraphPage() {
 			</div>
 			</button>
 
-			<HeaderSearch defaultValue={pkgName} onSearch={goToGraph} />
+			<HeaderSearch defaultValue={pkgName} onSearch={goToGraph} onUpload={handleUpload}/>
 
 			<div className="header-right">
 				<div className="view-toggle">

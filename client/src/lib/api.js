@@ -72,14 +72,14 @@ export async function loginPost(email, password) {
 // }
 
 export async function fetchMyGraphs() {
-  const res = await fetch(`${API_BASE}/graph/saved`, { credentials: 'include' });
+  const res = await fetch(`${API_BASE}/auth/saved`, { credentials: 'include' });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Failed to load saved graphs');
   return data.graphs;
 }
 
 export async function clearAllGraphsRequest() {
-  const res = await fetch(`${API_BASE}/graph/saved`, { method: 'DELETE', credentials: 'include' });
+  const res = await fetch(`${API_BASE}/auth/saved`, { method: 'DELETE', credentials: 'include' });
   if (!res.ok) {
     const data = await res.json();
     throw new Error(data.message || 'Failed to clear graphs');
@@ -91,7 +91,7 @@ export async function logoutPost() {
 }
 
 export async function saveGraphRequest(graph) {
-  const res = await fetch(`${API_BASE}/graph/save`, {
+  const res = await fetch(`${API_BASE}/auth/save`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -100,4 +100,15 @@ export async function saveGraphRequest(graph) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.message || data.error || 'Failed to save graph');
   return data;
+}
+
+export async function deleteGraphRequest(id) {
+  const res = await fetch(`${API_BASE}/auth/saved/${id}`, {
+    method: 'DELETE',
+    credentials: 'include'
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || 'Failed to delete graph');
+  }
 }

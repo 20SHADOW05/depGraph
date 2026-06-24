@@ -3,7 +3,6 @@ import { parse_npm, buildGraph_npmParse } from '../parsers/npm.js';
 import buildGraph from '../controllers/packageGraph.js';
 import normalizeGraph from '../controllers/normalizeGraph.js';
 import { authenticateToken } from '../config/auth.js';
-import { Graph } from '../models/graphModel.js'
 import multer from 'multer';
 import { Types } from "mongoose";
 
@@ -67,34 +66,5 @@ uploadRouter.post('/pkg', async (req, res) => {
         ...graph
     });
 })
-
-uploadRouter.post('/save', authenticateToken, async (req, res, next) => {
-    try {
-        const { source, rootName, fileName, nodes, edges } = req.body;
-
-        if (!rootName || !Array.isArray(nodes) || !Array.isArray(edges)) {
-            return res.status(400).json({ message: 'Invalid graph data' });
-        }
-
-        const objectId = new Types.ObjectId(req.user.sub);
-        const graph = await Graph.create({
-            user: objectId,
-            source,
-            rootName,
-            fileName: fileName || null,
-            nodes,
-            edges
-        });
-
-        return res.status(201).json({ message: 'Graph saved', graph });
-    } catch (err) {
-        next(err);
-    }
-});
-
-uploadRouter.get('/saved', authenticateToken, async (req, res) => {
-    const graphs = await Graph.find({ user: req.user.sub }).sort({ createdAt: -1 });
-     return res.json({ graphs });
-});
 
 export default uploadRouter;

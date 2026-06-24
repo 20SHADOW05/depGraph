@@ -41,7 +41,9 @@
 }
 
 .profile-back {
-  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: none;
   border: none;
   color: var(--tx2);
@@ -49,7 +51,6 @@
   font-size: 14px;
   cursor: pointer;
   margin-bottom: 32px;
-  transition: color 0.15s;
 }
 
 .profile-back:hover { color: var(--teal2); }
@@ -129,7 +130,6 @@
   padding: 11px 14px;
   border-bottom: 1px solid var(--tx3);
   cursor: pointer;
-  transition: background 0.15s;
 }
 
 .saved-graph-item:last-child { border-bottom: none; }
@@ -151,7 +151,6 @@
   font-size: 13px;
   font-family: var(--mono);
   cursor: pointer;
-  transition: all 0.15s;
 }
 
 .btn-secondary { background: transparent; border: 1px solid var(--bdr2); color: var(--tx2); }
@@ -159,3 +158,125 @@
 
 .btn-logout { background: transparent; border: 1px solid rgba(248, 113, 113, 0.3); color: #f87171; }
 .btn-logout:hover { background: rgba(248, 113, 113, 0.08); border-color: #f87171; }
+
+/* ── confirm dialog ── */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.dialog {
+  background: #0c1220;
+  border: 1px solid var(--bdr2);
+  border-radius: 12px;
+  padding: 28px 28px 22px;
+  width: min(360px, 90vw);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: dialog-pop 180ms ease-out;
+}
+
+.dialog-message {
+  margin: 0;
+  font-size: 14px;
+  color: var(--tx);
+  line-height: 1.6;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dialog-btn-cancel,
+.dialog-btn-confirm {
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--noto);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dialog-btn-cancel {
+  background: transparent;
+  border: 1px solid var(--bdr2);
+  color: var(--tx2);
+}
+
+.dialog-btn-cancel:hover {
+  border-color: var(--bdr-g);
+  color: var(--tx);
+}
+
+.dialog-btn-confirm {
+  background: transparent;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  color: #f87171;
+}
+
+.dialog-btn-confirm:hover {
+  background: rgba(248, 113, 113, 0.08);
+  border-color: #f87171;
+}
+
+/* ── per-graph delete ── */
+.saved-graph-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--tx3);
+}
+
+.saved-graph-item:last-child { border-bottom: none; }
+.saved-graph-item:hover { background: rgba(29, 158, 117, 0.04); }
+
+.saved-graph-name {
+  font-family: var(--noto);
+  font-size: 14px;
+  color: var(--tx);
+  cursor: pointer;
+  flex: 1;
+}
+
+.saved-graph-name:hover { color: var(--teal2); }
+
+.saved-graph-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.saved-graph-delete {
+  background: none;
+  border: none;
+  color: var(--tx2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  transition: color 0.15s;
+}
+
+.saved-graph-delete:hover { color: #f87171; }
+.saved-graph-delete:disabled { opacity: 0.4; cursor: wait; }
+
+@keyframes dialog-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

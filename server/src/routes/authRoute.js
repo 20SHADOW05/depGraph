@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { User  } from '../models/userModel.js';
+import { User } from '../models/userModel.js';
+import { Graph } from '../models/graphModel.js';
 import { signToken, hashPassword, comparePassword } from "../config/auth.js";
 import passport from "passport";
 import { authenticateToken } from "../config/auth.js";
@@ -86,6 +87,49 @@ authRouter.get('/me', authenticateToken, async (req, res) => {
 authRouter.post('/logout', (req, res) => {
   res.clearCookie('token');
   return res.status(200).json({ message: 'Logged out' });
+});
+
+authRouter.post('/save', authenticateToken, async (req, res, next) => {
+    try {
+        const { source, rootName, fileName, nodes, edges } = req.body;
+
+        if (!rootName || !Array.isArray(nodes) || !Array.isArray(edges)) {
+            return res.status(400).json({ message: 'Invalid graph data' });
+        }
+
+        const existing = await Graph.findOne({ user: req.user.sub, rootName });
+        if (existing) {
+            return res.status(409).json({ message: 'Graph already saved' });
+        }
+
+        const graph = await Graph.create({
+            user: req.user.sub,
+            source,
+            rootName,
+            fileName: fileName || null,
+            nodes,
+            edges
+        });
+
+        return res.status(201).json({ message: 'Graph saved', graph });
+    } catch (err) {
+        next(err);
+    }
+});
+
+authRouter.get('/saved', authenticateToken, async (req, res) => {
+    const graphs = await Graph.find({ user: req.user.sub }).sort({ createdAt: -1 });
+     return res.json({ graphs });
+});
+
+authRouter.delete('/saved/:id', authenticateToken, async (req, res, next) => {
+    try {
+        const graph = await Graph.findOneAndDelete({ _id: req.params.id, user: req.user.sub });
+        if (!graph) return res.status(404).json({ message: 'Graph not found' });
+        return res.status(200).json({ message: 'Deleted' });
+    } catch (err) {
+        next(err);
+    }
 });
 
 authRouter.delete('/saved', authenticateToken, async (req, res) => {
