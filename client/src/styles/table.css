@@ -1,0 +1,294 @@
+/* ── table wrap ── */
+.gt-wrap {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg4) transparent;
+}
+
+.gt-wrap::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.gt-wrap::-webkit-scrollbar-thumb {
+    background: var(--bg5);
+    border-radius: 2px;
+}
+
+/* ── table ── */
+.gt-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+/* ── header ── */
+.gt-th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 10px 12px;
+    background: rgba(12, 18, 32, 0.97);
+    border-bottom: 1px solid var(--tx3);
+    color: var(--tx2);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.gt-th-expand { width: 28px; padding: 10px 6px 10px 12px; }
+.gt-th-vuln   { text-align: center; width: 48px; }
+
+/* ── rows ── */
+.gt-row {
+    border-bottom: 1px solid var(--bdr);
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.gt-row:hover,
+.gt-row-open {
+    background: rgba(148, 163, 184, 0.1);
+    
+}
+
+.gt-row-open {
+    border-bottom: 1px solid var(--teal);
+}
+
+.gt-group-open {
+    outline: 1px solid var(--teal);
+    outline-offset: -1px;
+}
+
+.gt-row-vuln .gt-td-name .gt-pkg-name {
+    color: var(--red);
+}
+
+/* ── cells ── */
+.gt-td {
+    padding: 9px 12px;
+    vertical-align: middle;
+    color: var(--tx2);
+    line-height: 1; /**/
+}
+
+.gt-td-expand {
+    padding: 9px 6px 9px 12px;
+    color: var(--tx2);
+    width: 28px;
+}
+
+.gt-td-depth {
+    color: var(--tx2);
+    font-family: var(--noto);
+    font-size: 12px;
+    text-align: center;
+    width: 48px;
+}
+
+.gt-td-name {
+    min-width: 140px;
+    max-width: 240px;
+    height: 100%;  /* add this */
+}
+
+.gt-td-name-inner {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.gt-pkg-name {
+    font-family: var(--noto);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--tx);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gt-npm-link {
+    color: var(--tx3);
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    transition: color 0.15s;
+}
+
+.gt-npm-link:hover {
+    color: var(--teal);
+}
+
+.gt-td-ver {
+    white-space: nowrap;
+    width: 96px;
+}
+
+.gt-version {
+    font-family: var(--noto);
+    font-size: 12px;
+    color: var(--tx2);
+}
+
+/* ── parent chain ── */
+.gt-td-parents {
+    max-width: 320px;
+}
+
+.gt-parents {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px;
+}
+
+.gt-parent-crumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--noto);
+    font-size: 13px;
+    color: var(--tx2);
+    white-space: nowrap;
+}
+
+.gt-crumb-sep {
+    color: var(--amber);
+    display: flex;
+    align-items: center;
+}
+
+.gt-root-badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal2);
+}
+
+/* ── type badge ── */
+.gt-td-type { white-space: nowrap; }
+
+.gt-type-badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.gt-type-package   { color: var(--tx2); }
+.gt-type-root      { color: var(--teal2); }
+.gt-type-workspace { color: #a5b4fc; }
+.gt-type-peer      { color: #7dd3fc; }
+
+/* ── deprecated badge ── */
+.gt-badge-deprecated {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 5px;
+    border-radius: 3px;
+    background: rgba(245, 166, 35, 0.12);
+    color: var(--amber);
+    border: 1px solid rgba(245, 166, 35, 0.25);
+    flex-shrink: 0;
+}
+
+/* ── vuln indicator ── */
+.gt-td-vuln { text-align: center; }
+
+.gt-vuln-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 5px rgba(232, 115, 115, 0.5);
+}
+
+.gt-vuln-clean {
+    color: var(--tx2);
+    font-size: 11px;
+}
+
+/* ── expanded row ── */
+
+.gt-expanded-row {
+    background: var(--bg2);
+}
+
+.gt-expanded-cell {
+    padding: 0;
+    border-bottom: 1px solid var(--bdr);
+}
+
+.gt-expanded-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* ── score / exposure ── */
+
+.score-health {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.sh-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 220px;
+}
+
+.sh-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tx2);
+}
+
+.sh-inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+
+    font-family: var(--noto);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--tx2);
+}
+
+.sh-overall {
+    color: var(--teal2);
+    font-weight: 600;
+}
+
+.sh-critical {
+    color: var(--red);
+    font-weight: 500;
+}
+
+.sh-high {
+    color: var(--amber);
+    font-weight: 500;
+}
+
+.sh-medium {
+    color: #eab308;
+    font-weight: 500;
+}

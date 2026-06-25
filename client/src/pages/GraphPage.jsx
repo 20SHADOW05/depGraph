@@ -5,13 +5,14 @@ import Logo from '../components/Logo.jsx';
 import { ProfileIcon } from './HomePage.jsx';
 import { FiSidebar } from "react-icons/fi";
 import DependencyGraph from '../components/graph/DependencyGraph.jsx';
-// import GraphTable from '../components/graph/GraphTable.jsx'; // should be implemented if possible
-import Sidebar from '../components/sidebar/Sidebar.jsx';
+import GraphTable from '../components/GraphTable.jsx'; // should be implemented if possible
+import Sidebar from '../components/Sidebar.jsx';
 import { fetchPackageGraph, saveGraphRequest } from '../lib/api.js';
 import { useAuth } from '../lib/authContext.jsx';
 import '../styles/header.css';
 import '../styles/graph.css';
 import '../styles/sidebar.css';
+import '../styles/table.css';
 
 function filterGraph(graph, visibility) {
 	const nodes = graph.nodes || [];
@@ -170,7 +171,7 @@ export default function GraphPage() {
 			<div className="header-right">
 				<div className="view-toggle">
 					<button className={`view-btn ${viewMode === 'graph' ? 'active' : ''}`} onClick={() => setViewMode('graph')}>graph</button>
-					<button className={`view-btn ${viewMode === 'table' ? 'active' : ''}`} onClick={() => setViewMode('table')} disabled>table</button>
+					<button className={`view-btn ${viewMode === 'table' ? 'active' : ''}`} onClick={() => setViewMode('table')} >table</button>
 				</div>
 
 				<button className="btn-save" onClick={handleSave} disabled={saving || !graph.nodes?.length} title={saveError || undefined}>
@@ -206,7 +207,7 @@ export default function GraphPage() {
 				<p>{status}</p>
 				</div>
 			) : viewMode === 'table' ? (
-				<GraphTable graph={visibleGraph} />
+				<GraphTable graph={graph} />
 			) : (
 				<DependencyGraph graph={visibleGraph} selectedNodeId={selectedNode?.id || null} onNodeSelect={setSelectedNode} />
 			)}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Toggle from '../Toggle.jsx';
+import Toggle from './Toggle.jsx';
 
 async function fetchNpmScore(name) {
     const res = await fetch(`https://api.npms.io/v2/package/${encodeURIComponent(name)}`);

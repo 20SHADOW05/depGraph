@@ -352,8 +352,8 @@
 .sh-medium   { color: var(--amber); }
 
 .sh-na {
-    color: var(--tx3);
-    font-size: 11px;
+    color: var(--tx2);
+    font-size: 12px;
     font-family: var(--noto);
 }
 
