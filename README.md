@@ -13,52 +13,33 @@ You can either:
 * Inspect package metadata, dependency versions, and known vulnerabilities.
 * Save graphs to your account for later access.
 
-## Features
-
 ### Dependency Graph Visualization
 
 * Interactive dependency graph built with XYFlow.
 * Automatic graph layout using ELK.js.
 * Zoom, pan, and node inspection.
 
-### Package Analysis
-
-* Dependency relationships.
-* Package versions.
-* Package metadata from npm.
-* npm package quality metrics.
-
 ### Vulnerability Detection
 
+* npm package quality metrics by npms.io
 * Vulnerability data powered by OSV.dev.
 * Severity classification.
 * Vulnerability details and references.
 * Fixed-version information when available.
 
-### Authentication
-
-* Email and password authentication.
-* Google OAuth login.
-* JWT-based sessions.
 
 ## Tech Stack
 
 ### Frontend
 
 * React
-* Vite
-* React Router
-* XYFlow
-* ELK.js
+* XYFlow, ELK.js
 
 ### Backend
 
 * Node.js
 * Express
 * MongoDB
-* Mongoose
-* Passport.js (strategy: passport-google-oauth20)
-* JWT
 
 ### Environment Variables
 
@@ -72,6 +53,34 @@ JWT_SECRET
 GOOGLE_CLIENT_ID
 GOOGLE_CLIENT_SECRET
 GOOGLE_CALLBACK_URL
+```
+
+## Project Structure
+
+### Frontend (`client/`)
+
+The frontend is a React application responsible for package search, graph visualization, authentication flows, and user interaction.
+
+```text
+client/src/
+├── components/   graph, graphTable, sidebar, search panel components
+├── pages/        Route-level pages
+├── lib/          API utilities
+└── styles/       Global and component styles
+```
+
+### Backend (`server/`)
+
+The backend handles dependency resolution, lockfile parsing, vulnerability aggregation, authentication, and persistence.
+
+```text
+server/src/
+├── controllers/  application logic
+├── routes/       API endpoints
+├── parsers/      Lockfile parsers and dependency extraction
+├── models/       MongoDB schemas
+├── config/       Database and authentication configuration
+└── server.js     Application entry point
 ```
 
 ## Data Sources
