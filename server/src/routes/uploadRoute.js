@@ -1,10 +1,8 @@
 import { Router } from 'express';
-import { parse_npm, buildGraph_npmParse } from '../parsers/npm.js';
+import { buildGraph_npmParse } from '../parsers/npm.js';
 import buildGraph from '../controllers/packageGraph.js';
 import normalizeGraph from '../controllers/normalizeGraph.js';
-import { authenticateToken } from '../config/auth.js';
 import multer from 'multer';
-import { Types } from "mongoose";
 
 const upload = multer({
     storage: multer.memoryStorage(),

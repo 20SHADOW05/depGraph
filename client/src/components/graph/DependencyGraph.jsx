@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   Background,
   Controls,
+  Panel,
   ReactFlow,
   ReactFlowProvider,
   useReactFlow,
@@ -117,6 +118,13 @@ function FlowCanvas({ graph, selectedNodeId, onNodeSelect }) {
       >
         <Background color="rgba(148, 163, 184, 0.12)" gap={24} />
         <Controls showInteractive={false} fitViewOptions={{ padding: 0.12, duration: 400 }} />
+        <Panel position="bottom-left" className="graph-legend" aria-label="Package type legend">
+          <span className="graph-legend-title">Package types</span>
+          <span className="graph-legend-item"><i className="graph-legend-swatch root" />Root</span>
+          <span className="graph-legend-item"><i className="graph-legend-swatch workspace" />Workspace</span>
+          <span className="graph-legend-item"><i className="graph-legend-swatch package" />Package</span>
+          <span className="graph-legend-item"><i className="graph-legend-swatch peer" />Peer</span>
+        </Panel>
       </ReactFlow>
     </div>
   );

@@ -1,4 +1,4 @@
-function normalizeNode(node, source, requestedRangesByTarget) {
+function normalizeNode(node, source) {
     const type = node.type || (node.id === "root" ? "root" : "package");
     const normalized = {
         id: node.id,
@@ -8,13 +8,8 @@ function normalizeNode(node, source, requestedRangesByTarget) {
         type,
         source,
         vuln: node.vuln,
-        isDev: node.isDev === true,
+        deprecated: node.deprecated || null,
     };
-
-    if (source === "package-name") {
-        normalized.requestedRange =
-            node.requestedRange || requestedRangesByTarget.get(node.id) || null;
-    }
 
     return normalized;
 }
@@ -25,19 +20,9 @@ function normalizeGraph({ nodes = [], edges = [], source, rootName, fileName }) 
         (edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target)
     );
     const connectedNodeIds = new Set();
-    const requestedRangesByTarget = new Map();
-
     for (const edge of validEdges) {
         connectedNodeIds.add(edge.source);
         connectedNodeIds.add(edge.target);
-
-        if (
-            source === "package-name" &&
-            edge.requestedRange &&
-            !requestedRangesByTarget.has(edge.target)
-        ) {
-            requestedRangesByTarget.set(edge.target, edge.requestedRange);
-        }
     }
 
     const normalizedNodes = nodes
@@ -47,7 +32,7 @@ function normalizeGraph({ nodes = [], edges = [], source, rootName, fileName }) 
 
             return connectedNodeIds.has(node.id);
         })
-        .map((node) => normalizeNode(node, source, requestedRangesByTarget));
+        .map((node) => normalizeNode(node, source));
 
     const normalizedNodeIds = new Set(normalizedNodes.map((node) => node.id));
     const normalizedEdges = validEdges
@@ -56,8 +41,8 @@ function normalizeGraph({ nodes = [], edges = [], source, rootName, fileName }) 
                 normalizedNodeIds.has(edge.source) &&
                 normalizedNodeIds.has(edge.target)
         )
-        .map((edge, index) => ({
-            id: edge.id || `${edge.source}->${edge.target}:${index}`,
+        .map((edge) => ({
+            id: edge.id || `${edge.source}->${edge.target}:${edge.type || "dependency"}`,
             source: edge.source,
             target: edge.target,
             type: edge.type || "dependency",

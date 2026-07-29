@@ -5,7 +5,7 @@ import Logo from '../components/Logo.jsx';
 import { ProfileIcon } from './HomePage.jsx';
 import { FiSidebar } from "react-icons/fi";
 import DependencyGraph from '../components/graph/DependencyGraph.jsx';
-import GraphTable from '../components/GraphTable.jsx'; // should be implemented if possible
+import GraphTable from '../components/GraphTable.jsx';
 import Sidebar from '../components/Sidebar.jsx';
 import { fetchPackageGraph, saveGraphRequest } from '../lib/api.js';
 import { useAuth } from '../lib/authContext.jsx';
@@ -22,7 +22,7 @@ function filterGraph(graph, visibility) {
 	if (!visibility.showOptionalDependencies) hiddenEdgeTypes.add('optional');
 
 	const edges = (graph.edges || []).filter((edge) => !hiddenEdgeTypes.has(edge.type));
-	const incoming = new Set(edges.map((edge) => edge.target));
+	const incoming = new Set((graph.edges || []).map((edge) => edge.target));
 	const rootIds = nodes.some((node) => node.id === 'root')
 		? ['root']
 		: nodes.filter((node) => !incoming.has(node.id)).map((node) => node.id);
@@ -66,6 +66,7 @@ export default function GraphPage() {
 	const [selectedNode, setSelectedNode] = useState(null);
 	const [showDevDependencies, setShowDevDependencies] = useState(false);
 	const [showOptionalDependencies, setShowOptionalDependencies] = useState(false);
+	const [showOnlyVulnerable, setShowOnlyVulnerable] = useState(false);
 	const [status, setStatus] = useState('');
 	const [saving, setSaving] = useState(false);
 	const [saveError, setSaveError] = useState('');
@@ -147,6 +148,10 @@ export default function GraphPage() {
 		setSelectedNode(null);
 	}, [selectedNode, visibleGraph]);
 
+	useEffect(() => {
+		if (viewMode === 'table') setSidebarOpen(false);
+	}, [viewMode]);
+
 	const handleUpload = useCallback((nextGraph) => {
 		setGraph(nextGraph);
 		setSelectedNode(null);
@@ -170,8 +175,8 @@ export default function GraphPage() {
 
 			<div className="header-right">
 				<div className="view-toggle">
-					<button className={`view-btn ${viewMode === 'graph' ? 'active' : ''}`} onClick={() => setViewMode('graph')}>graph</button>
-					<button className={`view-btn ${viewMode === 'table' ? 'active' : ''}`} onClick={() => setViewMode('table')} >table</button>
+				<button className={`view-btn ${viewMode === 'graph' ? 'active' : ''}`} onClick={() => setViewMode('graph')}>graph</button>
+				<button className={`view-btn ${viewMode === 'table' ? 'active' : ''}`} onClick={() => setViewMode('table')}>table</button>
 				</div>
 
 				<button className="btn-save" onClick={handleSave} disabled={saving || !graph.nodes?.length} title={saveError || undefined}>
@@ -191,7 +196,8 @@ export default function GraphPage() {
 				<button
 					className={`sidebar-toggle ${sidebarOpen ? 'active' : ''}`}
 					onClick={() => setSidebarOpen((value) => !value)}
-					title="Toggle sidebar"
+					disabled={viewMode === 'table'}
+					title={viewMode === 'table' ? 'Sidebar is unavailable in table view' : 'Toggle sidebar'}
 					aria-label="Toggle sidebar"
 				>
 					<FiSidebar />
@@ -207,22 +213,32 @@ export default function GraphPage() {
 				<p>{status}</p>
 				</div>
 			) : viewMode === 'table' ? (
-				<GraphTable graph={graph} />
+				<GraphTable
+				graph={visibleGraph}
+				showDevDependencies={showDevDependencies}
+				showOptionalDependencies={showOptionalDependencies}
+				onToggleDevDependencies={() => setShowDevDependencies((value) => !value)}
+				onToggleOptionalDependencies={() => setShowOptionalDependencies((value) => !value)}
+				showOnlyVulnerable={showOnlyVulnerable}
+				onToggleOnlyVulnerable={() => setShowOnlyVulnerable((value) => !value)}
+				/>
 			) : (
 				<DependencyGraph graph={visibleGraph} selectedNodeId={selectedNode?.id || null} onNodeSelect={setSelectedNode} />
 			)}
 			</div>
 
-			<Sidebar
-			open={sidebarOpen}
-			pkgName={pkgName}
-			graph={graph}
-			selectedNode={selectedNode}
-			showDevDependencies={showDevDependencies}
-			showOptionalDependencies={showOptionalDependencies}
-			onToggleDevDependencies={() => setShowDevDependencies((value) => !value)}
-			onToggleOptionalDependencies={() => setShowOptionalDependencies((value) => !value)}
-			/>
+			{viewMode === 'graph' && (
+				<Sidebar
+				open={sidebarOpen}
+				pkgName={pkgName}
+				graph={graph}
+				selectedNode={selectedNode}
+				showDevDependencies={showDevDependencies}
+				showOptionalDependencies={showOptionalDependencies}
+				onToggleDevDependencies={() => setShowDevDependencies((value) => !value)}
+				onToggleOptionalDependencies={() => setShowOptionalDependencies((value) => !value)}
+				/>
+			)}
 		</div>
 		</div>
 	);

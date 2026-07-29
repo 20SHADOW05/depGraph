@@ -146,7 +146,8 @@ export const parse_npm = (fileContent) => {
                 }
 
                 if (!resolved && type === "peer") {
-                    const peerId = `peer:${depName}`;
+                    const peerRange = data[field][depName];
+                    const peerId = `peer:${depName}@${peerRange}`;
 
                     addNode(peerId, {
                         id: peerId,

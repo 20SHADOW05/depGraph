@@ -5,7 +5,7 @@
   "license": "ISC",
   "author": "Ankababu S",
   "type": "module",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js"

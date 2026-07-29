@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, Fragment } from 'react';
 import { FiChevronDown, FiChevronRight, FiExternalLink } from 'react-icons/fi';
 import { HiArrowLongLeft } from "react-icons/hi2";
+import Toggle from './Toggle.jsx';
 import '../styles/table.css';
 
 function parseSeverity(vuln) {
@@ -131,7 +132,6 @@ function ExpandedRow({ node }) {
                         <span>Fixed</span>
                     </div>
                     {vulns.map((v) => {
-                        const sev     = (v.severity?.[0]?.type || 'UNKNOWN').toUpperCase();
                         const fixed   = parseFixed(v);
                         const isOpen  = openVuln === v.id;
                         const aliases = v.aliases || [];
@@ -196,23 +196,53 @@ function ExpandedRow({ node }) {
     );
 }
 
-function buildParentChain(nodeId, edges, nodesById) {
-    const parents = [];
-    let current = nodeId;
+function buildIncomingEdgesByTarget(edges) {
+    const incomingByTarget = new Map();
 
-    while (true) {
-        const parentEdge = edges.find(e => e.target === current);
-        if (!parentEdge) break;
-        const parentNode = nodesById.get(parentEdge.source);
-        if (!parentNode) break;
-        parents.push(parentNode.name + '@' + parentNode.version);
-        current = parentEdge.source;
+    for (const edge of edges) {
+        if (edge.type === 'peer') continue;
+        if (!incomingByTarget.has(edge.target)) incomingByTarget.set(edge.target, []);
+        incomingByTarget.get(edge.target).push(edge);
     }
 
-    return parents; // nearest first
+    return incomingByTarget;
 }
 
-export default function GraphTable({ graph }) {
+function buildNearestParentPath(nodeId, incomingByTarget, nodesById) {
+    const path = [];
+    const visited = new Set([nodeId]);
+    let currentId = nodeId;
+
+    while (true) {
+        const parentEdge = incomingByTarget.get(currentId)?.[0];
+        if (!parentEdge) return { path, cyclic: false };
+
+        const parentNode = nodesById.get(parentEdge.source);
+        if (!parentNode) return { path, cyclic: false };
+
+        path.push(parentNode);
+        if (visited.has(parentNode.id)) return { path, cyclic: true };
+
+        visited.add(parentNode.id);
+        currentId = parentNode.id;
+    }
+}
+
+function packageLabel(node) {
+    return node.version
+        ? `${node.name}@${node.version}`
+        : node.name;
+}
+
+export default function GraphTable({
+    graph,
+    showDevDependencies,
+    showOptionalDependencies,
+    onToggleDevDependencies,
+    onToggleOptionalDependencies,
+    showOnlyVulnerable,
+    onToggleOnlyVulnerable,
+}) {
     const [expandedId, setExpandedId] = useState(null);
 
     const { nodes, edges } = graph;
@@ -224,11 +254,16 @@ export default function GraphTable({ graph }) {
     }, [nodes]);
 
     const rows = useMemo(() => {
-        return nodes.map(node => ({
-            node,
-            parents: buildParentChain(node.id, edges, nodesById),
-        }));
-    }, [nodes, edges, nodesById]);
+        const incomingByTarget = buildIncomingEdgesByTarget(edges);
+
+        return nodes
+            .filter((node) => node.type !== 'peer')
+            .filter((node) => !showOnlyVulnerable || node.vuln)
+            .map(node => ({
+                node,
+                ...buildNearestParentPath(node.id, incomingByTarget, nodesById),
+            }));
+    }, [nodes, edges, nodesById, showOnlyVulnerable]);
 
     const toggle = useCallback((id) => {
         setExpandedId(prev => prev === id ? null : id);
@@ -242,11 +277,28 @@ export default function GraphTable({ graph }) {
 
     return (
         <div className="gt-wrap">
+            <div className="gt-toolbar">
+                <span className="gt-toolbar-label">Nearest install path</span>
+                <div className="gt-table-controls">
+                    <div className="gt-peer-toggle">
+                        <span>Show dev dependencies</span>
+                        <Toggle on={showDevDependencies} onClick={onToggleDevDependencies} ariaLabel="Show dev dependencies" />
+                    </div>
+                    <div className="gt-peer-toggle">
+                        <span>Show optional dependencies</span>
+                        <Toggle on={showOptionalDependencies} onClick={onToggleOptionalDependencies} ariaLabel="Show optional dependencies" />
+                    </div>
+                    <div className="gt-peer-toggle">
+                        <span>Only vulnerable packages</span>
+                        <Toggle on={showOnlyVulnerable} onClick={onToggleOnlyVulnerable} ariaLabel="Only vulnerable packages" />
+                    </div>
+                </div>
+            </div>
+            <p className="gt-path-note">To explore every dependency path for a package, use graph view. peer dependencies are not listed in the table</p>
             <table className="gt-table">
                 <thead>
                     <tr>
                         <th className="gt-th gt-th-expand" />
-                        <th className="gt-th">Depth</th>
                         <th className="gt-th">Package</th>
                         <th className="gt-th">Version</th>
                         <th className="gt-th">Parent chain</th>
@@ -254,7 +306,14 @@ export default function GraphTable({ graph }) {
                         <th className="gt-th gt-th-vuln">Vuln</th>
                     </tr>
                 </thead>
-                {rows.map(({ node, parents }) => {
+                {rows.length === 0 && (
+                    <tbody>
+                        <tr>
+                            <td colSpan={6} className="gt-empty">No vulnerable packages in this view.</td>
+                        </tr>
+                    </tbody>
+                )}
+                {rows.map(({ node, path, cyclic }) => {
                     const isOpen = expandedId === node.id;
                     return (
                         <tbody key={node.id} className={isOpen ? 'gt-group-open' : ''}>
@@ -265,7 +324,6 @@ export default function GraphTable({ graph }) {
                                 <td className="gt-td gt-td-expand">
                                     {isOpen ? <FiChevronDown size={13} /> : <FiChevronRight size={13} />}
                                 </td>
-                                <td className="gt-td gt-td-depth">{node.depth ?? '—'}</td>
                                 <td className="gt-td gt-td-name">
                                     <div className="gt-td-name-inner">
                                         <span className="gt-pkg-name">{node.name}</span>
@@ -285,20 +343,21 @@ export default function GraphTable({ graph }) {
                                     <span className="gt-version">{node.version ?? '—'}</span>
                                 </td>
                                 <td className="gt-td gt-td-parents">
-                                    {parents.length === 0 ? (
-                                        <span className="gt-root-badge">root</span>
+                                    {path.length === 0 ? (
+                                        node.id === 'root' ? (
+                                            <span className="gt-root-badge">root</span>
+                                        ) : (
+                                            <span className="gt-noparent-badge">No resolved parent</span>
+                                        )
                                     ) : (
-                                        <span className="gt-parents">
-                                            {parents.map((p, i) => (
-                                                <span key={i} className="gt-parent-crumb">
-                                                    {p}
-                                                    {i < parents.length - 1 && (
-                                                        <span className="gt-crumb-sep">
-                                                            <HiArrowLongLeft size={20} />
-                                                        </span>
-                                                    )}
-                                                </span>
+                                        <span className="gt-path">
+                                            {path.map((parentNode, index) => (
+                                                <Fragment key={parentNode.id}>
+                                                    <span className="gt-parent-crumb">{packageLabel(parentNode)}</span>
+                                                    {index < path.length - 1 && <span className="gt-crumb-sep"><HiArrowLongLeft size={20} /></span>}
+                                                </Fragment>
                                             ))}
+                                            {cyclic && <span className="gt-cycle-badge">↺ cycle</span>}
                                         </span>
                                     )}
                                 </td>
@@ -314,7 +373,7 @@ export default function GraphTable({ graph }) {
                             </tr>
                             {isOpen && (
                                 <tr className="gt-expanded-row">
-                                    <td colSpan={7} className="gt-expanded-cell">
+                                    <td colSpan={6} className="gt-expanded-cell">
                                         <ExpandedRow node={node} />
                                     </td>
                                 </tr>

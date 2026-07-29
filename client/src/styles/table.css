@@ -31,7 +31,8 @@
     z-index: 2;
     padding: 10px 12px;
     background: rgba(12, 18, 32, 0.97);
-    border-bottom: 1px solid var(--tx3);
+    border-bottom: 1px solid #3a3f49;
+    border-top: 1px solid #3a3f49;
     color: var(--tx2);
     font-size: 12px;
     font-weight: 600;
@@ -85,14 +86,6 @@
     width: 28px;
 }
 
-.gt-td-depth {
-    color: var(--tx2);
-    font-family: var(--noto);
-    font-size: 12px;
-    text-align: center;
-    width: 48px;
-}
-
 .gt-td-name {
     min-width: 140px;
     max-width: 240px;
@@ -140,14 +133,54 @@
 
 /* ── parent chain ── */
 .gt-td-parents {
-    max-width: 320px;
+  max-width: 320px;
 }
 
-.gt-parents {
+.gt-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 46px;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--bdr);
+    background: var(--bg2);
+}
+
+.gt-toolbar-label {
+    color: var(--tx2);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.gt-peer-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--tx2);
+    font-size: 12px;
+}
+
+.gt-table-controls {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.gt-path {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 3px;
+}
+
+.gt-path-note {
+    margin: 0;
+    padding: 8px 18px;
+    color: var(--tx3);
+    font-size: 12px;
 }
 
 .gt-parent-crumb {
@@ -164,6 +197,26 @@
     color: var(--amber);
     display: flex;
     align-items: center;
+}
+
+.gt-cycle-badge,
+.gt-noparent-badge {
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.gt-cycle-badge {
+    background: rgba(245, 158, 11, 0.14);
+    color: #fbbf24;
+}
+
+.gt-noparent-badge {
+    color: var(--tx3);
 }
 
 .gt-root-badge {
@@ -187,7 +240,6 @@
 .gt-type-package   { color: var(--tx2); }
 .gt-type-root      { color: var(--teal2); }
 .gt-type-workspace { color: #a5b4fc; }
-.gt-type-peer      { color: #7dd3fc; }
 
 /* ── deprecated badge ── */
 .gt-badge-deprecated {
