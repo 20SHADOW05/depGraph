@@ -5,28 +5,48 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
-      trim: true
+      trim: true,
     },
     passwordHash: {
       type: String,
-      default: null
+      default: null,
     },
     googleId: {
       type: String,
       default: null,
-      index: true
-    }
+      index: true,
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verifyTokenHash: {
+      type: String,
+      default: null,
+    },
+    verifyTokenExpiry: {
+      type: Date,
+      default: null,
+    },
+    resetTokenHash: {
+      type: String,
+      default: null,
+    },
+    resetTokenExpiry: {
+      type: Date,
+      default: null,
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 // middleware goes here, after schema definition
