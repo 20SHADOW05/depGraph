@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiLogOut, FiTrash2, FiLock, FiX } from 'react-icons/fi';
 import { IoReturnUpBackSharp } from "react-icons/io5";
-import { fetchMyGraphs, clearAllGraphsRequest, deleteGraphRequest, logoutPost } from '../lib/api.js';
+import { fetchMyGraphs, clearAllGraphsRequest, deleteGraphRequest, logoutPost, changePassword } from '../lib/api.js';
 import { useAuth } from '../lib/authContext.jsx';
 import Logo from '../components/Logo.jsx';
 import '../styles/profile.css';
@@ -21,6 +21,55 @@ function ConfirmDialog({ message, onConfirm, onCancel }) {
   );
 }
 
+function ChangePasswordDialog({ onCancel, onSuccess }) {
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleSubmit() {
+    setError('');
+    if (!currentPassword || !newPassword) return setError('All fields required');
+    if (newPassword !== confirm) return setError('Passwords do not match');
+
+    setBusy(true);
+    try {
+      await changePassword(currentPassword, newPassword);
+      onSuccess();
+    } catch (err) {
+      setError(err.message || 'Failed to change password');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="dialog-overlay">
+      <div className="dialog">
+        <h3>Change password</h3>
+        {error && <p className="dialog-error">{error}</p>}
+        <div className="field">
+          <label className="field-label">Current password</label>
+          <input className="field-input" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+        </div>
+        <div className="field">
+          <label className="field-label">New password</label>
+          <input className="field-input" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+        </div>
+        <div className="field">
+          <label className="field-label">Confirm new password</label>
+          <input className="field-input" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
+        </div>
+        <div className="dialog-actions">
+          <button className="dialog-btn-cancel" onClick={onCancel}>Cancel</button>
+          <button className="dialog-btn-confirm" onClick={handleSubmit} disabled={busy}>{busy ? 'Updating…' : 'Update'}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ProfilePage() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -30,6 +79,8 @@ export default function ProfilePage() {
   const [deletingId, setDeletingId] = useState(null);
   const [error, setError] = useState('');
   const [dialog, setDialog] = useState(null); // { message, onConfirm }
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [pwMessage, setPwMessage] = useState('');
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login');
@@ -162,13 +213,20 @@ export default function ProfilePage() {
         {error && <p className="profile-error">{error}</p>}
 
         <div className="profile-actions">
-          <button className="btn-secondary" disabled>
+          <button className="btn-secondary" onClick={() => setShowChangePassword(true)}>
             <FiLock size={14} /> Change password
           </button>
           <button className="btn-logout" onClick={handleLogout}>
             <FiLogOut size={14} /> Log out
           </button>
         </div>
+        {pwMessage && <p className="profile-success">{pwMessage}</p>}
+        {showChangePassword && (
+          <ChangePasswordDialog
+            onCancel={() => setShowChangePassword(false)}
+            onSuccess={() => { setShowChangePassword(false); setPwMessage('Password changed successfully'); }}
+          />
+        )}
       </div>
     </div>
   );

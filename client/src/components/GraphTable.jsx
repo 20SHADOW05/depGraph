@@ -271,7 +271,7 @@ export default function GraphTable({
 
     if (!nodes.length) {
         return (
-            <div className="gt-empty">No packages to display.</div>
+            <div className="gt-empty">Search for a package or upload package-lock.json to display the table.</div>
         );
     }
 

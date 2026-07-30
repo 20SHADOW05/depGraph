@@ -150,7 +150,7 @@
 }
 
 /* ── empty / loading states ── */
-.graph-empty-message {
+.graph-empty-message , .gt-empty {
   height: 100%;
   display: grid;
   place-items: center;
