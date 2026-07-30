@@ -89,19 +89,6 @@ SMTP_PASS
 EMAIL_FROM
 ```
 
-For a Cloudflare frontend + Heroku backend deployment:
-
-```env
-# server/.env on Heroku
-FRONTEND_URL=https://your-cloudflare-app.example
-GOOGLE_CALLBACK_URL=https://your-heroku-app.example/auth/google/callback
-
-# client/.env.production for the Cloudflare build
-VITE_API_BASE_URL=https://your-heroku-app.example
-```
-
-The frontend must be built with `VITE_API_BASE_URL` set to the Heroku API URL, and the backend must know the Cloudflare origin through `FRONTEND_URL` so CORS, email links, and auth redirects use the correct hostnames.
-
 ## Project Structure
 
 ### Frontend (`client/`)
@@ -125,9 +112,3 @@ server/src/
 ├── config/       Database and authentication configuration
 └── server.js     Application entry point
 ```
-
-## Data Sources
-
-* [OSV.dev](https://osv.dev) — vulnerability information
-* [npm Registry](https://registry.npmjs.org) — package metadata and dependency information
-* [npms.io](https://npms.io) — package quality metrics
