@@ -1,56 +1,35 @@
 import nodemailer from "nodemailer";
 
-let transporterPromise = null;
+let transporter = null;
 
-async function getTransporter() {
-  if (transporterPromise) return transporterPromise;
+function getTransporter() {
+  	if (transporter) return transporter;
 
-  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-    transporterPromise = Promise.resolve(
-      nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587,
-        secure: process.env.SMTP_SECURE === "true",
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      }),
-    );
-  } else {
-    transporterPromise = nodemailer.createTestAccount().then((testAccount) =>
-      nodemailer.createTransport({
-        host: testAccount.smtp.host,
-        port: testAccount.smtp.port,
-        secure: testAccount.smtp.secure,
-        auth: {
-          user: testAccount.user,
-          pass: testAccount.pass,
-        },
-      }),
-    );
-  }
+	if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+		throw new Error(
+		"Email sending requires SMTP_HOST, SMTP_USER, and SMTP_PASS in .env. " +
+		"Example: SMTP_HOST=smtp.gmail.com SMTP_USER=your@gmail.com SMTP_PASS=app-password",
+		);
+	}
 
-  return transporterPromise;
+	transporter = nodemailer.createTransport({
+		host: process.env.SMTP_HOST,
+		port: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587,
+		secure: process.env.SMTP_SECURE === "true",
+		auth: {
+		user: process.env.SMTP_USER,
+		pass: process.env.SMTP_PASS,
+		},
+	});
+
+  	return transporter;
 }
 
 export async function sendMail({ to, subject, html, text }) {
-  const transporter = await getTransporter();
-  const info = await transporter.sendMail({
-    from: process.env.EMAIL_FROM || "no-reply@depgraph.local",
-    to,
-    subject,
-    html,
-    text,
-  });
-
-  // If using ethereal, log preview URL
-  if (nodemailer.getTestMessageUrl && info) {
-    const preview = nodemailer.getTestMessageUrl(info);
-    if (preview) console.log("Preview URL:", preview);
-  }
-
-  return info;
+	const transporter = getTransporter();
+	const from = process.env.EMAIL_FROM || process.env.SMTP_USER || "noreply@depgraph.local";
+	const info = await transporter.sendMail({ from, to, subject, html, text });
+	return info;
 }
 
 export default sendMail;

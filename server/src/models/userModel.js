@@ -43,6 +43,10 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    unverifiedExpiresAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -59,5 +63,10 @@ const userSchema = new mongoose.Schema(
 //   }
 //   next()
 // })
+
+userSchema.index(
+  { unverifiedExpiresAt: 1 },
+  { expireAfterSeconds: 0, partialFilterExpression: { emailVerified: false } },
+);
 
 export const User = mongoose.models.User || mongoose.model("User", userSchema);
