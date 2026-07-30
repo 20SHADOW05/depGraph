@@ -7,11 +7,13 @@ import {
     comparePassword,
     generateToken,
     hashToken,
+    validatePassword,
 } from "../config/auth.js";
 import passport from "passport";
 import { authenticateToken } from "../config/auth.js";
 import { sendMail } from "../utils/mailer.js";
 import rateLimit from "express-rate-limit";
+import { getAuthCookieOptions } from "../config/auth.js";
 
 const authLimiter = rateLimit({ windowMs: 60 * 1000, max: 10 });
 
@@ -22,6 +24,11 @@ authRouter.post("/signup", async (req, res) => {
 
     if (!name || !email || !password) {
         return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+        return res.status(400).json({ message: passwordError });
     }
 
     const existing = await User.findOne({ email: email.toLowerCase() });
@@ -70,7 +77,7 @@ authRouter.post("/signup", async (req, res) => {
                     </a>
                 </p>
                 `,
-            text: `or you can verify your email by visiting:\n${link}`, 
+            text: `or you can verify your email by visiting:\n${link}`,
         });
     } catch (err) {
         console.error('sendMail failed during signup, cleaning up user', err);
@@ -109,12 +116,9 @@ authRouter.post("/login", async (req, res) => {
     }
 
     const token = signToken(user);
-    res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 14 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("token", token, getAuthCookieOptions());
+
+    const redirectTarget = `${process.env.FRONTEND_URL || "http://localhost:5173"}/graph`;
 
     return res.status(200).json({
         message: "Login successful",
@@ -124,7 +128,7 @@ authRouter.post("/login", async (req, res) => {
             email: user.email,
             emailVerified: user.emailVerified,
         },
-        redirectTo: "/graph",
+        redirectTo: redirectTarget,
     });
 });
 
@@ -134,7 +138,11 @@ authRouter.post("/request-verify", authLimiter, async (req, res) => {
     if (!email) return res.status(400).json({ message: "email is required" });
 
     const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user || user.emailVerified) {
+        return res.status(200).json({
+            message: "If an unverified account exists, a verification email was sent",
+        });
+    }
 
     const token = generateToken();
     user.verifyTokenHash = hashToken(token);
@@ -143,10 +151,11 @@ authRouter.post("/request-verify", authLimiter, async (req, res) => {
     await user.save();
 
     const link = `${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/verify?token=${token}&email=${encodeURIComponent(user.email)}`;
-    await sendMail({
-        to: user.email,
-        subject: "Verify your depGraph account",
-        html: `
+    try {
+        await sendMail({
+            to: user.email,
+            subject: "Verify your depGraph account",
+            html: `
             <h2>Verify your depGraph account</h2>
 
             <p>You requested a new verification email.</p>
@@ -171,10 +180,15 @@ authRouter.post("/request-verify", authLimiter, async (req, res) => {
                 </a>
             </p>
         `,
-        text: `or you can verify your email by visiting:\n${link}`,
-    });
+            text: `or you can verify your email by visiting:\n${link}`,
+        });
+    } catch (err) {
+        console.error("sendMail failed during verification request", err);
+    }
 
-    return res.status(200).json({ message: "Verification email sent" });
+    return res.status(200).json({
+        message: "If the email exists, a verification link was sent",
+    });
 });
 
 // verify link endpoint used by frontend (GET)
@@ -211,7 +225,11 @@ authRouter.post("/request-reset", authLimiter, async (req, res) => {
     if (!email) return res.status(400).json({ message: "email is required" });
 
     const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+        return res.status(200).json({
+            message: "If the email exists, a reset link was sent.",
+        });
+    }
 
     const token = generateToken();
     user.resetTokenHash = hashToken(token);
@@ -219,10 +237,11 @@ authRouter.post("/request-reset", authLimiter, async (req, res) => {
     await user.save();
 
     const link = `${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/reset?token=${token}&email=${encodeURIComponent(user.email)}`;
-    await sendMail({
-        to: user.email,
-        subject: "Reset your depGraph password",
-        html: `
+    try {
+        await sendMail({
+            to: user.email,
+            subject: "Reset your depGraph password",
+            html: `
             <h2>Reset your depGraph password</h2>
 
             <p>We received a request to reset your password.</p>
@@ -247,10 +266,15 @@ authRouter.post("/request-reset", authLimiter, async (req, res) => {
                 </a>
             </p>
         `,
-        text: `Reset your depGraph account password by visiting:\n${link}`,
-    });
+            text: `Reset your depGraph account password by visiting:\n${link}`,
+        });
+    } catch (err) {
+        console.error("sendMail failed during password reset request", err);
+    }
 
-    return res.status(200).json({ message: "Password reset email sent" });
+    return res.status(200).json({
+        message: "If the email exists, a reset link was sent.",
+    });
 });
 
 // perform password reset (POST)
@@ -260,6 +284,9 @@ authRouter.post("/reset", authLimiter, async (req, res) => {
         return res
             .status(400)
             .json({ message: "token, email and password are required" });
+
+    const passwordError = validatePassword(password);
+    if (passwordError) return res.status(400).json({ message: passwordError });
 
     const hash = hashToken(String(token));
     const user = await User.findOne({
@@ -293,13 +320,8 @@ authRouter.get(
     (req, res, next) => {
         // verifies the response , attaches the user object to req
         const token = signToken(req.user);
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-            maxAge: 14 * 24 * 60 * 60 * 1000,
-        });
-        res.redirect("http://localhost:5173/graph");
+        res.cookie("token", token, getAuthCookieOptions());
+        res.redirect(`${process.env.FRONTEND_URL || "http://localhost:5173"}/graph`);
     },
 );
 
@@ -311,6 +333,9 @@ authRouter.post("/change-password", authenticateToken, async (req, res) => {
             return res
                 .status(400)
                 .json({ message: "currentPassword and newPassword are required" });
+
+        const passwordError = validatePassword(newPassword);
+        if (passwordError) return res.status(400).json({ message: passwordError });
 
         const user = await User.findById(req.user.sub);
         if (!user) return res.status(404).json({ message: "User not found" });
@@ -333,7 +358,7 @@ authRouter.get("/me", authenticateToken, async (req, res) => {
 });
 
 authRouter.post("/logout", (req, res) => {
-    res.clearCookie("token");
+    res.clearCookie("token", { path: "/" });
     return res.status(200).json({ message: "Logged out" });
 });
 

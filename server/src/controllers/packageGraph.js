@@ -164,9 +164,18 @@ async function buildGraph(root) {
         }
     }
 
-    const data = await packageVuln({ queries: nodeQueries });
-    for (let i = 0; i < nodes.length; i++) {
-        nodes[i].vuln = data.results[i]?.vulns?.length > 0 ? true : false;
+    if (nodeQueries.length > 0) {
+        try {
+            const data = await packageVuln({ queries: nodeQueries });
+            for (let i = 0; i < nodes.length; i++) {
+                nodes[i].vuln = data.results[i]?.vulns?.length > 0 ? true : false;
+            }
+        } catch (error) {
+            console.error("packageVuln lookup failed, continuing without vuln data:", error);
+            for (let i = 0; i < nodes.length; i++) {
+                nodes[i].vuln = null;
+            }
+        }
     }
 
     return { nodes, edges };

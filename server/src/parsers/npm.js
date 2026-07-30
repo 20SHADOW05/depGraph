@@ -177,7 +177,7 @@ export const buildGraph_npmParse = async (fileContent) => {
     const graph = parse_npm(fileContent);
 
     const { nodes, edges } = graph;
-    
+
     const queries = nodes
         .filter(
             (node) =>
@@ -194,14 +194,25 @@ export const buildGraph_npmParse = async (fileContent) => {
         }));
 
     if (queries.length > 0) {
-        const osvData = await packageVuln({ queries });
+        try {
+            const osvData = await packageVuln({ queries });
 
-        let queryIndex = 0;
+            let queryIndex = 0;
 
-        for (const node of nodes) {
-            if (node.type !== "package") continue;
-            node.vuln = osvData.results?.[queryIndex]?.vulns?.length > 0;
-            queryIndex++;
+            for (const node of nodes) {
+                if (node.type !== "package") continue;
+
+                const result = osvData.results?.[queryIndex];
+                node.vuln = result === undefined ? null : result.vulns?.length > 0;
+
+                queryIndex++;
+            }
+        } catch (error) {
+            console.error("packageVuln lookup failed, continuing without vuln data:", error);
+            for (const node of nodes) {
+                if (node.type !== "package") continue;
+                node.vuln = null;
+            }
         }
     }
 

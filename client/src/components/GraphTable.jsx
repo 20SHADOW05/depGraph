@@ -309,7 +309,7 @@ export default function GraphTable({
                 {rows.length === 0 && (
                     <tbody>
                         <tr>
-                            <td colSpan={6} className="gt-empty">No vulnerable packages in this view.</td>
+                            <td className="gt-empty"></td>
                         </tr>
                     </tbody>
                 )}

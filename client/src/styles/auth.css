@@ -101,6 +101,13 @@
   color: var(--red);
 }
 
+/* success state for verify icon (explicit) */
+.verify-icon.is-success {
+  background: rgba(29, 158, 117, 0.14);
+  border-color: rgba(29, 158, 117, 0.22);
+  color: var(--tx);
+}
+
 .verify-footer {
   margin-top: 20px;
 }
@@ -126,17 +133,6 @@
   background: var(--bg4);
   border-color: var(--bdr2);
   color: var(--teal2);
-}
-
-.verify-link {
-  color: var(--teal2);
-  font-size: 13px;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.verify-link:hover {
-  text-decoration: underline;
 }
 
 .auth-global-error {
@@ -480,10 +476,14 @@
   color: var(--tx2);
 }
 
-.auth-success {
+.auth-success , .profile-success{
   font-size: 13px;
   color: var(--amber);
   padding: 0 0 16px 0;
+}
+
+.profile-success {
+  text-align: center;
 }
 
 /* ── responsive ── */

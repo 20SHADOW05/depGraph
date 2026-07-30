@@ -17,6 +17,18 @@ export function signToken(user) {
 	);
 }
 
+export function getAuthCookieOptions() {
+	const isProduction = process.env.NODE_ENV === "production";
+
+	return {
+		httpOnly: true,
+		secure: isProduction,
+		sameSite: "none",
+		path: "/",
+		maxAge: 14 * 24 * 60 * 60 * 1000,
+	};
+}
+
 export function authenticateToken(req, res, next) {
 	const token = req.cookies.token;
 	if (!token) return res.status(401).json({ message: "Unauthorized" });
@@ -40,6 +52,24 @@ export async function comparePassword(password, hash) {
 	}
 
 	return bcrypt.compare(password, hash);
+}
+
+export function validatePassword(password) {
+	if (typeof password !== "string" || password.length < 8) {
+		return "Password must be at least 8 characters";
+	}
+
+	const strengthChecks = [
+		/[A-Z]/.test(password),
+		/[0-9]/.test(password),
+		/[^A-Za-z0-9]/.test(password),
+	];
+
+	if (strengthChecks.filter(Boolean).length < 1) {
+		return "Password must include an uppercase letter, number, or symbol";
+	}
+
+	return null;
 }
 
 export function configurePassport() {

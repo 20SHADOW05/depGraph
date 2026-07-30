@@ -8,12 +8,11 @@ import cors from "cors";
 import initDb from "./config/db.js";
 import { configurePassport } from "./config/auth.js";
 
-initDb();
-configurePassport();
+const frontendOrigin = process.env.FRONTEND_URL || true;
 
 server.use(
   cors({
-    origin: true,
+    origin: frontendOrigin,
     credentials: true,
   }),
 );
@@ -33,8 +32,19 @@ server.use((err, req, res, next) => {
   res.status(err.status || 500).json({ message: "Internal server error" });
 });
 
-const PORT = process.env.PORT || 3000;
+async function start() {
+  try {
+    await initDb();
+    configurePassport();
 
-server.listen(PORT, () => {
-  console.log(`server running on port ${PORT}`);
-});
+    const PORT = process.env.PORT || 3000;
+    server.listen(PORT, () => {
+      console.log(`server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to connect to MongoDB; server did not start.", error);
+    process.exitCode = 1;
+  }
+}
+
+start();

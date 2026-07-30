@@ -1,4 +1,10 @@
-export const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const configuredApiBase = import.meta.env.VITE_API_BASE_URL;
+
+if (!configuredApiBase && import.meta.env.PROD) {
+	throw new Error('VITE_API_BASE_URL is required in production');
+}
+
+export const API_BASE = configuredApiBase || 'http://localhost:3000';
 
 async function readJson(res) {
 	const data = await res.json().catch(() => ({}));

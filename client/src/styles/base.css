@@ -6,7 +6,7 @@
 
 @font-face {
   font-family: 'noto';
-  src: url('../public/JetBrainsMono[wght].ttf');
+  src: url('/JetBrainsMono[wght].ttf');
 }
 
 :root {
