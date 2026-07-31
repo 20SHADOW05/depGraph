@@ -358,8 +358,9 @@ authRouter.get("/me", authenticateToken, async (req, res) => {
 });
 
 authRouter.post("/logout", (req, res) => {
-    res.clearCookie("token", { path: "/" });
-    return res.status(200).json({ message: "Logged out" });
+	const { maxAge, ...clearOptions } = getAuthCookieOptions();
+	res.clearCookie("token", clearOptions);
+	return res.status(200).json({ message: "Logged out" });
 });
 
 authRouter.post("/save", authenticateToken, async (req, res, next) => {
