@@ -278,7 +278,6 @@ export default function GraphTable({
     return (
         <div className="gt-wrap">
             <div className="gt-toolbar">
-                <span className="gt-toolbar-label">Nearest install path</span>
                 <div className="gt-table-controls">
                     <div className="gt-peer-toggle">
                         <span>Show dev dependencies</span>

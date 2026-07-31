@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import HeaderSearch from '../components/HeaderSearch.jsx';
 import Logo from '../components/Logo.jsx';
+import ProjectNotice from '../components/ProjectNotice.jsx';
 import { ProfileIcon } from './HomePage.jsx';
 import { FiSidebar } from "react-icons/fi";
 import DependencyGraph from '../components/graph/DependencyGraph.jsx';
@@ -174,6 +175,7 @@ export default function GraphPage() {
 			<HeaderSearch defaultValue={pkgName} onSearch={goToGraph} onUpload={handleUpload}/>
 
 			<div className="header-right">
+				<ProjectNotice />
 				<div className="view-toggle">
 				<button className={`view-btn ${viewMode === 'graph' ? 'active' : ''}`} onClick={() => setViewMode('graph')}>graph</button>
 				<button className={`view-btn ${viewMode === 'table' ? 'active' : ''}`} onClick={() => setViewMode('table')}>table</button>

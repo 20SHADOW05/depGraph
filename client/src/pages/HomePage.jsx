@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { GoPerson } from "react-icons/go";
 import { useAuth } from '../lib/authContext.jsx';
 import Logo from '../components/Logo.jsx';
+import ProjectNotice from '../components/ProjectNotice.jsx';
 import SearchPanel from '../components/SearchPanel.jsx';
 import '../styles/landing.css';
 
@@ -28,7 +29,12 @@ export default function HomePage() {
     <main className="landing">
       <div className="landing-grid" aria-hidden="true" />
 
+      <a className="project-credit" href="https://ankababu.me/" target="_blank" rel="noreferrer">
+        built by <span>shad0w_o</span>
+      </a>
+
       <div className="landing-nav">
+        <ProjectNotice />
         {!loading && (
           user ? (
             <ProfileIcon name={user.name} />
@@ -55,4 +61,3 @@ export default function HomePage() {
     </main>
   );
 }
-

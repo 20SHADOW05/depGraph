@@ -23,7 +23,7 @@ export function getAuthCookieOptions() {
 	return {
 		httpOnly: true,
 		secure: isProduction,
-		sameSite: "none",
+		sameSite: isProduction ? "none" : "lax",
 		path: "/",
 		maxAge: 14 * 24 * 60 * 60 * 1000,
 	};

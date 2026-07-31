@@ -1,5 +1,6 @@
 import express from "express";
 const server = express();
+server.set("trust proxy", 1);
 
 import cookieParser from "cookie-parser";
 import passport from "passport";

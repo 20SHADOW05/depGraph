@@ -228,3 +228,30 @@
   align-items: center;
   gap: 10px;
 }
+
+.project-credit {
+  position: fixed;
+  top: 33px;
+  left: 50%;
+  color: var(--tx);
+  font-family: var(--noto);
+  font-size: 14px;
+  text-decoration: none;
+  transform: translateX(-50%);
+}
+
+.project-credit span {
+  color: var(--teal2);
+}
+
+.project-credit:hover span {
+  color: var(--teal);
+  text-decoration: underline;
+}
+
+@media (max-width: 520px) {
+  .project-credit {
+    top: 28px;
+    font-size: 10px;
+  }
+}
